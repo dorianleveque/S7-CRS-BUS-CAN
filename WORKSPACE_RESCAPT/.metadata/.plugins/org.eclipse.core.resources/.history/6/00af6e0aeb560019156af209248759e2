@@ -1,0 +1,132 @@
+/*
+ * drv_spi.c
+ */
+
+
+#include "drv_spi.h"
+
+SPI_HandleTypeDef SpiHandle;
+
+//=================================================================
+//  SPI INIT
+//=================================================================
+
+void spi1_Init()
+{
+    SpiHandle.Instance               = SPI1;
+    SpiHandle.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_64;
+    SpiHandle.Init.Direction         = SPI_DIRECTION_2LINES;
+    SpiHandle.Init.CLKPhase          = SPI_PHASE_1EDGE; //SPI_PHASE_2EDGE
+    SpiHandle.Init.CLKPolarity       = SPI_POLARITY_LOW;
+    SpiHandle.Init.CRCCalculation    = SPI_CRCCALCULATION_DISABLED;
+    SpiHandle.Init.CRCPolynomial     = 7;
+    SpiHandle.Init.DataSize          = SPI_DATASIZE_8BIT;
+    SpiHandle.Init.FirstBit          = SPI_FIRSTBIT_MSB;
+    SpiHandle.Init.NSS               = SPI_NSS_HARD_OUTPUT ;
+    SpiHandle.Init.TIMode            = SPI_TIMODE_DISABLED;
+    SpiHandle.Init.Mode = SPI_MODE_MASTER;
+
+    HAL_SPI_Init(&SpiHandle);
+
+    __HAL_SPI_ENABLE(&SpiHandle);
+}
+
+//=================================================================
+//  SPI TRANSFER
+//  Send OUT on MOSI, return data from MISO
+//=================================================================
+
+uint8_t spi1_Transfer(uint8_t out)
+{
+uint8_t aTxBuffer[1];
+uint8_t aRxBuffer[1];
+
+aTxBuffer[0]=out;
+HAL_SPI_TransmitReceive(&SpiHandle, (uint8_t *)aTxBuffer, (uint8_t *)aRxBuffer, 1, 100);
+return aRxBuffer[0];
+}
+//=========================================================================
+
+// return coeff a0 b1 b2 c12
+uint16_t spi1_get_coeff(void) {
+	term_printf("\n\n---------\n COEFF: \n);
+	uint8_t cmd[] = {0x88, 0x00, 0x8A, 0x00, 0x8C, 0x00, 0x8E, 0x00, 0x90, 0x00, 0x92, 0x00, 0x94, 0x00, 0x96, 0x00, 0x00};
+	uint8_t sensor_result[10];
+	int sensor_result_index = 0;
+	uint16_t coeff_list[4];
+	int coeff_list_index = 0;
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, 0); // CS
+	for (int i=0; i<sizeof(cmd); i++){
+		uint8_t value;
+		value = spi1_Transfer(cmd[i]);
+		if (value != 0){
+			sensor_result[sensor_result_index] = value;
+			term_printf("SENSOR VALUE : %x \t| %d\n", sensor_result[sensor_result_index], sensor_result[sensor_result_index]);
+			sensor_result_index++;
+		}
+	}
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, 1); // |CS
+
+
+	for (int i=0; i < sizeof(coeff_list); i++){
+    	if (i%2 == 0) {
+    		coeff_list[coeff_list_index] = (sensor_result[i] << 8);
+			coeff_list[coeff_list_index] |= sensor_result[i+1];
+    		term_printf("COEFF:  %x + %x\n", sensor_result[i], sensor_result[i+1]);
+    		term_printf("FINAL COEFF:  %x\n", coeff_list[coeff_list_index]);
+    		coeff_list_index++;
+    	}
+	}
+	return coeff_list;
+}
+
+uint16_t spi1_get_adc_temperature(void) {
+	term_printf("\n\n---------\n TEMPERATURE: \n);
+	uint8_t cmd[] = {0x84, 0x00, 0x86, 0x00, 0x00};
+	uint8_t sensor_result[5];
+	int sensor_result_index = 0;
+	uint16_t coeff;
+
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, 0); // CS
+	for (int i=0; i<sizeof(cmd); i++){
+		uint8_t value;
+		value = spi1_Transfer(cmd[i]);
+		if (value != 0){
+			sensor_result[sensor_result_index] = value;
+			term_printf("SENSOR VALUE : %x \t| %d\n", sensor_result[sensor_result_index], sensor_result[sensor_result_index]);
+			sensor_result_index++;
+		}
+	}
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, 1); // |CS
+
+	coeff = sensor_result[0] << 8;
+	coeff |= sensor_result[1];
+	term_printf("FINAL VALUE:  %x\n", coeff);
+	return coeff;
+}
+
+
+uint16_t spi1_get_adc_pressure(void) {
+	term_printf("\n\n---------\n PRESSURE: \n);
+	uint8_t cmd[] = {0x80, 0x00, 0x82, 0x00, 0x00};
+	uint8_t sensor_result[5];
+	int sensor_result_index = 0;
+	uint16_t coeff;
+
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, 0); // CS
+	for (int i=0; i<sizeof(cmd); i++){
+		uint8_t value;
+		value = spi1_Transfer(cmd[i]);
+		if (value != 0){
+			sensor_result[sensor_result_index] = value;
+			term_printf("SENSOR VALUE : %x \t| %d\n", sensor_result[sensor_result_index], sensor_result[sensor_result_index]);
+			sensor_result_index++;
+		}
+	}
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, 1); // |CS
+
+	coeff = sensor_result[0] << 8;
+	coeff |= sensor_result[1];
+	term_printf("FINAL VALUE:  %x\n", coeff);
+	return coeff;
+}
