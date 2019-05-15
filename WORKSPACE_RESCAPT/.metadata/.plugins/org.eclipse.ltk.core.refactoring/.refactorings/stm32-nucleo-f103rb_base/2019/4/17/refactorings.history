@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;stm32-nucleo-f103rb_base/Src/delayTimer&apos; to &apos;delayTimer.c&apos;" description="Rename resource &apos;delayTimer&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="Src/delayTimer" name="delayTimer.c" stamp="1556208600869" updateReferences="true"/>
+</session>
