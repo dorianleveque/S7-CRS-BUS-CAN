@@ -66,7 +66,7 @@
        </widget>
       </item>
       <item>
-       <layout class="QGridLayout" name="gridLayout" rowstretch="1,4" columnstretch="1,1" columnminimumwidth="0,0">
+       <layout class="QGridLayout" name="gridLayout" rowstretch="1,4" columnstretch="2,2,1" columnminimumwidth="0,0,0">
         <property name="leftMargin">
          <number>10</number>
         </property>
@@ -79,23 +79,6 @@
         <property name="bottomMargin">
          <number>10</number>
         </property>
-        <item row="1" column="1">
-         <widget class="QGroupBox" name="groupBox_4">
-          <property name="font">
-           <font>
-            <pointsize>10</pointsize>
-           </font>
-          </property>
-          <property name="title">
-           <string>IMU</string>
-          </property>
-          <layout class="QVBoxLayout" name="verticalLayout_4">
-           <item>
-            <widget class="QOpenGLWidget" name="openGLWidget"/>
-           </item>
-          </layout>
-         </widget>
-        </item>
         <item row="0" column="0">
          <widget class="QGroupBox" name="groupBox_3">
           <property name="font">
@@ -111,6 +94,13 @@
             <widget class="QLineEdit" name="anemoField">
              <property name="readOnly">
               <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_2">
+             <property name="text">
+              <string>Km/h</string>
              </property>
             </widget>
            </item>
@@ -231,6 +221,13 @@
             </widget>
            </item>
            <item>
+            <widget class="QLabel" name="label_3">
+             <property name="text">
+              <string>KPa</string>
+             </property>
+            </widget>
+           </item>
+           <item>
             <widget class="QPushButton" name="refreshPressureButton">
              <property name="text">
               <string/>
@@ -240,6 +237,46 @@
                <normaloff>assets/refresh.svg</normaloff>assets/refresh.svg</iconset>
              </property>
             </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="0" column="2">
+         <widget class="QGroupBox" name="groupBox_5">
+          <property name="title">
+           <string>Temperature</string>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_4">
+           <item>
+            <widget class="QLineEdit" name="temperatureField">
+             <property name="readOnly">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_4">
+             <property name="text">
+              <string>°C</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="1" column="1" colspan="2">
+         <widget class="QGroupBox" name="groupBox_4">
+          <property name="font">
+           <font>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
+          <property name="title">
+           <string>IMU</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_4">
+           <item>
+            <widget class="QOpenGLWidget" name="openGLWidget"/>
            </item>
           </layout>
          </widget>
@@ -298,8 +335,8 @@
    <slot>onRefreshAnemoButton()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>415</x>
-     <y>178</y>
+     <x>262</x>
+     <y>168</y>
     </hint>
     <hint type="destinationlabel">
      <x>406</x>
@@ -314,8 +351,8 @@
    <slot>onRefreshPressureButton()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>849</x>
-     <y>178</y>
+     <x>523</x>
+     <y>168</y>
     </hint>
     <hint type="destinationlabel">
      <x>890</x>
@@ -330,12 +367,44 @@
    <slot>onAutoRefreshButton(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>19</x>
-     <y>101</y>
+     <x>29</x>
+     <y>92</y>
     </hint>
     <hint type="destinationlabel">
      <x>16</x>
      <y>113</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>lux_button</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>onLuminositeButton()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>64</x>
+     <y>387</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>13</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>distance_button</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>onDistanceButton()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>69</x>
+     <y>423</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>12</x>
+     <y>415</y>
     </hint>
    </hints>
   </connection>
@@ -344,5 +413,7 @@
   <slot>onRefreshAnemoButton()</slot>
   <slot>onRefreshPressureButton()</slot>
   <slot>onAutoRefreshButton(bool)</slot>
+  <slot>onLuminositeButton()</slot>
+  <slot>onDistanceButton()</slot>
  </slots>
 </ui>

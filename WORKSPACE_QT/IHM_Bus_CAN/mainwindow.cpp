@@ -16,10 +16,10 @@ MainWindow::MainWindow(QWidget *parent) :
     timer_tick = new QTimer();
     timer2_tick= new QTimer();
     connect(timer_tick, SIGNAL(timeout()), this, SLOT(onTimer_Tick()));
-    //connect(timer2_tick, SIGNAL(timeout()), this, SLOT(onRefreshPressureButton()));
+    connect(timer2_tick, SIGNAL(timeout()), this, SLOT(updateCanData()));
 
-    timer_tick -> start(1); // 1ms
-    timer2_tick -> start(50);
+    timer_tick -> start(10); // 1ms
+    //timer2_tick -> start(10);
 
     /*thread = new threadPCAN(this);
     thread.run();*/
@@ -44,31 +44,31 @@ void MainWindow::openCANPort()
     CAN_Status(h); // Clear Status
 }
 
-
-
 void MainWindow::refreshPressureButton()
 {
-    sendCANMessage(ID_ANEMO_PRESSURE_CARD, {'P'});
+    sendCANMessage(ID_IHM, ID_ANEMO_PRESSURE_CARD, {'P'});
 }
 
 void MainWindow::refreshAnemoButton()
 {
-    sendCANMessage(ID_ANEMO_PRESSURE_CARD, {'P', 'T'});
+    sendCANMessage(ID_IHM, ID_LUX_RANGE_CARD, {'W'});
 }
 
-void MainWindow::sendCANMessage(int id, QList<int> data)
+void MainWindow::sendCANMessage(int fromId, int toId, unsigned char order, QList<int> data)
 {
     TPCANMsg msgBuff;
 
-    msgBuff.ID      =   static_cast<unsigned char>(id);
+    msgBuff.ID      =   static_cast<unsigned char>(toId);
     msgBuff.MSGTYPE =   MSGTYPE_STANDARD;
-    msgBuff.LEN     =   static_cast<unsigned char>(data.length());
+    msgBuff.LEN     =   static_cast<unsigned char>(data.length()+1);
 
+    msgBuff.DATA[0] = static_cast<unsigned char>(fromId);
+    msgBuff.DATA[1] = order;
     for(int i=0; i<data.length(); i++) {
-        msgBuff.DATA[i] = static_cast<unsigned char> (data[i]);
+        msgBuff.DATA[i+2] = static_cast<unsigned char> (data[i]);
     }
 
-    //LINUX_CAN_Write_Timeout(h, &msgBuff,0);
+    LINUX_CAN_Write_Timeout(h, &msgBuff,0);
     //CAN_Write(h, &msgBuff);
 }
 
@@ -77,30 +77,26 @@ void MainWindow::receiveCANMessage()
 {
     LINUX_CAN_Read_Timeout(h, &pMsgBuff, -1);
     //LINUX_CAN_Read_Timeout(h, &pMsgBuff, 0);
-    int id = int(pMsgBuff.Msg.ID);
+    int fromId = int(pMsgBuff.Msg.DATA[0]);
+    char data_type = char(pMsgBuff.Msg.DATA[1]);
     int lenght = int(pMsgBuff.Msg.LEN);
-    //printf("ID: %d lenght: %d\n", id, lenght);
-    unsigned int data_type;
+    float data_tmp = float (pMsgBuff.Msg.DATA[2]<<24 | pMsgBuff.Msg.DATA[3]<<16 | pMsgBuff.Msg.DATA[4]<<8 | pMsgBuff.Msg.DATA[5]);
+    //printf("ID: %x lenght: %d\n", fromId, lenght);
+    //unsigned int data_type;
 
-    switch (id) {
+    switch (fromId) {
     case ID_ANEMO_PRESSURE_CARD:
-        data_type = (unsigned int) pMsgBuff.Msg.DATA[0];
         switch (data_type) {
         case 'P':
-            for(int i=1; i<lenght; i++) {
-                pressure = pMsgBuff.Msg.DATA[i] << (32-8*i);
-            }
+            pressure = data_tmp;
             ui -> pressureField -> setText(QString::number(pressure));
             break;
         case 'T':
-            for(int i=1; i<lenght; i++) {
-                temperature = pMsgBuff.Msg.DATA[i] << (32-8*i);
-            }
+            temperature = data_tmp;
+            ui -> temperatureField -> setText(QString::number(temperature));
             break;
         case 'W':
-            for(int i=1; i<lenght; i++) {
-                windSpeed = pMsgBuff.Msg.DATA[i] << (32-8*i);
-            }
+            windSpeed = data_tmp;
             ui -> anemoField -> setText(QString::number(windSpeed));
             break;
         }
@@ -108,51 +104,33 @@ void MainWindow::receiveCANMessage()
     case ID_LUX_RANGE_CARD:
         switch (data_type) {
         case 'L':
-            for(int i=1; i<lenght; i++) {
-                lux = pMsgBuff.Msg.DATA[i] << (32-8*i);
-            }
+            lux = data_tmp;
             ui->lumDistanceField-> setText(QString::number(lux));
             break;
         case 'D':
-            for(int i=1; i<lenght; i++) {
-                distance = pMsgBuff.Msg.DATA[i] << (32-8*i);
-            }
+            distance = data_tmp;
             break;
         }
         break;
-
-            /*float pressure;
-            unsigned int a0, a1, a2, a3;
-            a0 = (unsigned int) pMsgBuff.Msg.DATA[0];
-            a1 = (unsigned int) pMsgBuff.Msg.DATA[1];
-            a2 = (unsigned int) pMsgBuff.Msg.DATA[2];
-            a3 = (unsigned int) pMsgBuff.Msg.DATA[3];
-            pressure = (float) (a0<<24 | a1<<16 | a2<<8 | a3);
-
-            /*printf("a0 %x\n", pMsgBuff.Msg.DATA[0]);
-            printf("a1 %x\n", pMsgBuff.Msg.DATA[1]);
-            printf("a2 %x\n", pMsgBuff.Msg.DATA[2]);
-            printf("a3 %x\n", pMsgBuff.Msg.DATA[3]);*/
-            printf("pressure %f\n\n", pressure);
-            /*for(int i=0; i<lenght; i++) {
-                pressure = pMsgBuff.Msg.DATA[i] << (32-8*(i+1));
-                printf("data[%d]= %x\n", i, pMsgBuff.Msg.DATA[i]);
-            }
-            ui -> pressureField -> setText(QString::number(pressure));*/
-
-        /*case 2:
-            long unsigned int speed;
-            for(int i=0; i<pMsgBuff.Msg.LEN; i++) {
-                speed |= pMsgBuff.Msg.DATA[i] << (32-8*(i+1));
-            }
-            ui -> anemoField -> setText(QString::number(speed));
-        break;*/
     }
 }
 
 
 /////////////////
 // SLOT
+
+void MainWindow::updateCanData() {
+   /* switch(updateState)
+    {
+        case 0: sendCANMessage(ID_IHM, ID_ANEMO_PRESSURE_CARD, {'P'}); break;
+        case 1: sendCANMessage(ID_IHM, ID_ANEMO_PRESSURE_CARD, {'T'}); break;
+        case 2: sendCANMessage(ID_IHM, ID_ANEMO_PRESSURE_CARD, {'W'}); break;
+        case 3: sendCANMessage(ID_IHM, ID_LUX_RANGE_CARD, {'L'}); break;
+        default: updateState=0;
+    }
+    updateState++;*/
+}
+
 void MainWindow::onRefreshAnemoButton()
 {
     refreshAnemoButton();
@@ -161,6 +139,18 @@ void MainWindow::onRefreshAnemoButton()
 void MainWindow::onRefreshPressureButton()
 {
     refreshPressureButton();
+}
+
+void MainWindow::onLuminositeButton()
+{
+    luxSwitchState = true;
+    distSwitchState = false;
+}
+
+void MainWindow::onDistanceButton()
+{
+    luxSwitchState = false;
+    distSwitchState = true;
 }
 
 void MainWindow::onAutoRefreshButton(bool state)
