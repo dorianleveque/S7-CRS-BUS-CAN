@@ -38,7 +38,7 @@ FORMS += \
 
 LIBS += -lpcan
 
-#CONFIG += console
+CONFIG += console
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

@@ -9,6 +9,7 @@
 //			CAN ACCEPTANCE FILTER
 //====================================================================
 #define USE_FILTER	1
+#define M_PI  3.14159265358979323846
 // Can accept until 4 Standard IDs
 #define ID_IHM	                0xA0 	// pression sensor
 #define ID_ANEMO_PRESSURE_CARD	0xC1	// anemo sensor
@@ -38,6 +39,10 @@ int switch_state = -1;
 float pressure;
 float temperature;
 float anemo_speed;
+
+float phi;
+float teta;
+float psi;
 //====================================================================
 // >>>>>>>>>>>>>>>>>>>>>>>>>> MAIN <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 //====================================================================
@@ -74,7 +79,6 @@ int main(void)
 	response =  mpu9250_WhoAmI();
 	//term_printf("%d",response);
 #endif
-
 
     can_Init();
     can_SetFreq(CAN_BAUDRATE); // CAN BAUDRATE : 500 MHz -- cf Inc/config.h
@@ -118,7 +122,11 @@ int main(void)
 #endif
 
 #if MPU9250
+
+    get_acceleroscope_gyroscope();
     HAL_Delay(2);
+
+    send_axes();
 #endif
 
 #if MPL115A_ANEMO
@@ -128,16 +136,55 @@ int main(void)
     temperature = m.temperature;
     anemo_speed = anemo_GetSpeed(1);
 
-    send_pressure();
+    /*send_pressure();
     HAL_Delay(50);
     send_temperature();
     HAL_Delay(50);
     send_wind_speed();
-    HAL_Delay(50);
+    HAL_Delay(50);*/
 #endif
     }
 	return 0;
 }
+
+void get_acceleroscope_gyroscope() {
+	// get accelerometer and gyroscope
+	int16_t data[6];
+	mpu9250_Step(data);
+
+	float ax = data[0]*(4.0/32768.0);
+	float ay = data[1]*(4.0/32768.0);
+	float az = data[2]*(4.0/32768.0);
+
+	float gx = data[3]*(1000.0/32768.0)*(M_PI/180.0);
+	float gy = data[4]*(1000.0/32768.0)*(M_PI/180.0);
+	float gz = data[5]*(1000.0/32768.0)*(M_PI/180.0);
+
+	// correction Euler
+	madgwickAHRSupdateIMU(gx,gy,gz,ax,ay,az);
+
+	float R11 = q0*q0 + q1*q1 - q2*q2 - q3*q3;
+	float R12 = 2*(q1*q2 - q0* q3);
+	float R13 = 2*(q1*q3 + q0*q2);
+
+	float R21 = 2*(q0*q3 + q1*q2);
+	float R22 = q0*q0 - q1*q1 + q2*q2 -q3*q3;
+	float R23 = 2*(q2*q3 - q0*q1);
+
+	float R31 = 2*(q1*q3 - q0*q2);
+	float R32 = 2*(q2*q3 + q0*q1);
+	float R33 = q0*q0 - q1*q1 - q2*q2 + q3*q3;
+
+	// Calcul des angle d'Euler a partir de la matrice de rotation(angle en degré)
+	phi 	= atan2(-R31, R33)*(180.0/M_PI);
+	teta 	= (asin(R32)*(180.0/M_PI));
+	psi 	= atan2(-R12,R22)*(180.0/M_PI);
+}
+
+
+
+////////////////////////////////
+// SEND FUNCTIONS
 
 void send_can(int from_id, int to_id, char data_type, unsigned char *data, int len)
 {
@@ -220,6 +267,28 @@ void send_lux(void)
 	term_printf("Lux: %d lux\n", Als.lux);
 }
 
+void send_axes(void)
+{
+	unsigned char data[] = {
+		//(unsigned char) 'A',
+		(unsigned char) ( (int) (phi) )>>8,
+		(unsigned char) ( (int) (phi) )& 0x000000FF,
+		(unsigned char) ( (int) (psi) )>>8,
+		(unsigned char) ( (int) (psi) ) & 0x000000FF,
+		(unsigned char) ( (int) (teta) )>>8,
+		(unsigned char) ( (int) (teta) ) & 0x000000FF
+	};
+	send_can(ID_LUX_RANGE_CARD, ID_IHM, 'A', data, (int) sizeof(data) / sizeof(data[0]));
+    term_printf("roulis = %f \n", phi);
+	term_printf("lacet = %f \n", psi);
+	term_printf("tangage = %f \n", teta);
+}
+
+// END SEND FUNCTIONS
+////////////////////////////////
+
+////////////////////////////////
+// RECEIVE FUNCTION
 
 MsgRcv receive_can(void)
 {
@@ -241,6 +310,9 @@ MsgRcv receive_can(void)
 	m.order 	= msg_rcv.data[1];
 	return m;
 }
+// END RECEIVE FUNCTION
+////////////////////////////////
+
 
 //====================================================================
 //			CAN CALLBACK RECEPT
@@ -285,6 +357,11 @@ void can_callback(void)
 			break;
 		case (unsigned char) 'X':
 			term_printf("X = %d", (int)msg_rcv.data);
+#endif
+#if MPU9250
+		case (unsigned char) 'A':
+			send_axes();
+			break;
 #endif
 		}
 	}
@@ -361,12 +438,12 @@ void VL6180x_Step(void)
     switch (State.mode) {
     case RunRangePoll:
         RangeState();
-        send_distance();
+        //send_distance();
         break;
 
     case RunAlsPoll:
         AlsState();
-        send_lux();
+        //send_lux();
         break;
 
     case InitErr:

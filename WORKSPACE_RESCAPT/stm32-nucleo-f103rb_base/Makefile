@@ -42,6 +42,8 @@ SRCS += mpu9250.c
 SRCS += tickTimer.c
 SRCS += util.c
 
+SRCS +=madgwickAHRS.c
+
 EXT_SRCS = stm32f1xx_hal.c
 EXT_SRCS += stm32f1xx_hal_rcc.c
 EXT_SRCS += stm32f1xx_hal_rcc_ex.c
@@ -85,7 +87,7 @@ INCLUDE = $(addprefix -I,$(INC_DIRS))
 
 DEFS = -DSTM32F103xBt
 
-CFLAGS  = -ggdb -O0
+CFLAGS  = -ggdb -O3
 CFLAGS += -mlittle-endian --specs=rdimon.specs -mthumb -mcpu=cortex-m3 -mthumb-interwork -Wl,--gc-sections -lgcc -lc -lm -lrdimon
 #CFLAGS += -mlittle-endian -mthumb -mcpu=cortex-m3 -mthumb-interwork -Wl,--gc-sections -lgcc -lc
 

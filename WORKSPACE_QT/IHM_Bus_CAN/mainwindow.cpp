@@ -51,7 +51,7 @@ void MainWindow::refreshPressureButton()
 
 void MainWindow::refreshAnemoButton()
 {
-    sendCANMessage(ID_IHM, ID_LUX_RANGE_CARD, {'W'});
+    sendCANMessage(ID_IHM, ID_LUX_RANGE_CARD, 'X', { 0x00, 0x32 });
 }
 
 void MainWindow::sendCANMessage(int fromId, int toId, unsigned char order, QList<int> data)
@@ -75,13 +75,13 @@ void MainWindow::sendCANMessage(int fromId, int toId, unsigned char order, QList
 
 void MainWindow::receiveCANMessage()
 {
-    LINUX_CAN_Read_Timeout(h, &pMsgBuff, -1);
-    //LINUX_CAN_Read_Timeout(h, &pMsgBuff, 0);
+    //LINUX_CAN_Read_Timeout(h, &pMsgBuff, -1);
+    LINUX_CAN_Read_Timeout(h, &pMsgBuff, 100);
     int fromId = int(pMsgBuff.Msg.DATA[0]);
     char data_type = char(pMsgBuff.Msg.DATA[1]);
     int lenght = int(pMsgBuff.Msg.LEN);
     float data_tmp = float (pMsgBuff.Msg.DATA[2]<<24 | pMsgBuff.Msg.DATA[3]<<16 | pMsgBuff.Msg.DATA[4]<<8 | pMsgBuff.Msg.DATA[5]);
-    //printf("ID: %x lenght: %d\n", fromId, lenght);
+    printf("ID: %x lenght: %d\n", fromId, lenght);
     //unsigned int data_type;
 
     switch (fromId) {
