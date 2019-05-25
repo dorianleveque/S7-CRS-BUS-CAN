@@ -11,8 +11,8 @@
 #define USE_FILTER	1
 #define M_PI  3.14159265358979323846
 // Can accept until 4 Standard IDs
-#define ID_IHM	                0xA0 	// pression sensor
-#define ID_ANEMO_PRESSURE_CARD	0xC1	// anemo sensor
+#define ID_IHM	                0xA0 	// IHM
+#define ID_ANEMO_PRESSURE_CARD	0xC1	// pression / anemo sensor
 #define ID_LUX_RANGE_CARD	    0xC2	// lux / distance sensor
 #define ID_IMU_CARD        	    0xC3	// gyroscope sensor
 //====================================================================
@@ -238,6 +238,18 @@ void send_wind_speed(void)
 	term_printf("Wind Speed: %f km/h\n", anemo_speed);
 }
 
+void send_pressure_temperature_wind_speed(void) {
+	unsigned char data[] = {
+		(unsigned char) pressure>>8,
+		(unsigned char) pressure & 0x000000FF,
+		(unsigned char) temperature>>8,
+		(unsigned char) temperature & 0x000000FF,
+		(unsigned char) anemo_speed>>8,
+		(unsigned char) anemo_speed & 0x000000FF
+	};
+	send_can(ID_ANEMO_PRESSURE_CARD, ID_IHM, 'B', data, (int) sizeof(data) / sizeof(data[0]));
+}
+
 void send_distance(void)
 {
 	unsigned char data[] = {
@@ -246,7 +258,7 @@ void send_distance(void)
 		(unsigned char) Range.range_mm>>8,
 		(unsigned char) Range.range_mm & 0x000000FF
 	};
-	send_can(ID_LUX_RANGE_CARD, ID_IHM, 'D', data, (int) sizeof(data) / sizeof(data[0]));
+	send_can(ID_LUX_RANGE_CARD, ID_IHM, 'R', data, (int) sizeof(data) / sizeof(data[0]));
 	term_printf("distance: %d mm\n", Range.range_mm);
 }
 
@@ -340,13 +352,14 @@ void can_callback(void)
 		case (unsigned char) 'W':
 			send_wind_speed();
 			break;
+		case (unsigned char) 'B':
+			send_pressure_temperature_wind_speed();
+			break;
 #endif
 #if VL6180X
-		case (unsigned char) 'L':
-			send_lux();
-			break;
 		case (unsigned char) 'D':
-			send_distance();
+			if (State.mode == RunAlsPoll) send_lux();
+			if (State.mode == RunRangePoll) send_distance();			
 			break;
 		case (unsigned char) 'X':
 			term_printf("X = %d", (uint8_t) msg_rcv.data[0]);
