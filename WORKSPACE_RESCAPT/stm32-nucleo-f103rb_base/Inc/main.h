@@ -36,7 +36,7 @@ typedef struct _MsgRcv {
 	unsigned char fromId;
 	unsigned char toId;
 	int len;
-	unsigned char data;
+	unsigned char *data;
 	unsigned char order;
 	} MsgRcv;
 

@@ -205,7 +205,6 @@ void send_can(int from_id, int to_id, char data_type, unsigned char *data, int l
 void send_temperature(void)
 {
 	unsigned char data[] = {
-		//(unsigned char) 'T',
 		(unsigned char) temperature>>24,
 		(unsigned char) temperature>>16,
 		(unsigned char) temperature>>8,
@@ -218,7 +217,6 @@ void send_temperature(void)
 void send_pressure(void)
 {
 	unsigned char data[] = {
-		//(unsigned char) 'P',
 		(unsigned char) pressure>>24,
 		(unsigned char) pressure>>16,
 		(unsigned char) pressure>>8,
@@ -231,7 +229,6 @@ void send_pressure(void)
 void send_wind_speed(void)
 {
 	unsigned char data[] = {
-		//(unsigned char) 'W',
 		(unsigned char) anemo_speed>>24,
 		(unsigned char) anemo_speed>>16,
 		(unsigned char) anemo_speed>>8,
@@ -244,7 +241,6 @@ void send_wind_speed(void)
 void send_distance(void)
 {
 	unsigned char data[] = {
-		//(unsigned char) 'D',
 		(unsigned char) Range.range_mm>>24,
 		(unsigned char) Range.range_mm>>16,
 		(unsigned char) Range.range_mm>>8,
@@ -257,7 +253,6 @@ void send_distance(void)
 void send_lux(void)
 {
 	unsigned char data[] = {
-		//(unsigned char) 'L',
 		(unsigned char) Als.lux>>24,
 		(unsigned char) Als.lux>>16,
 		(unsigned char) Als.lux>>8,
@@ -270,7 +265,6 @@ void send_lux(void)
 void send_axes(void)
 {
 	unsigned char data[] = {
-		//(unsigned char) 'A',
 		(unsigned char) ( (int) (phi) )>>8,
 		(unsigned char) ( (int) (phi) )& 0x000000FF,
 		(unsigned char) ( (int) (psi) )>>8,
@@ -296,18 +290,17 @@ MsgRcv receive_can(void)
 	int lenMsg;
 	lenMsg = can_Read(&msg_rcv);
 
-	int data;
+	unsigned char data[6];
 	for (int i=2; i<lenMsg; i++) {
-		data |= msg_rcv.data[i] << (32-8*(i-1));
-
+		data[i-2] = msg_rcv.data[i];
 	}
 
 	MsgRcv m;
 	m.fromId = msg_rcv.data[0];
 	m.toId 	=  msg_rcv.id;
-	m.len 	= lenMsg;
+	m.len 	= lenMsg-2;
 	m.data 	= data;
-	m.order 	= msg_rcv.data[1];
+	m.order = msg_rcv.data[1];
 	return m;
 }
 // END RECEIVE FUNCTION
@@ -356,7 +349,9 @@ void can_callback(void)
 			send_distance();
 			break;
 		case (unsigned char) 'X':
-			term_printf("X = %d", (int)msg_rcv.data);
+			term_printf("X = %d", (uint8_t) msg_rcv.data[0]);
+			State.mode = ((uint8_t) msg_rcv.data[0]) ? RunAlsPoll : RunRangePoll;
+			break;
 #endif
 #if MPU9250
 		case (unsigned char) 'A':
