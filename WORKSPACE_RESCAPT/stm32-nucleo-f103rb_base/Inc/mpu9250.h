@@ -239,7 +239,7 @@
 void mpu9250_InitMPU9250(void);
 uint8_t mpu9250_WhoAmI(void);
 uint8_t mpu9250_MagWhoAmI(void);
-void mpu9250_Step(void);
+void mpu9250_Step(int16_t * destination);
 void mpu9250_ReadAccelData(int16_t *);
 void mpu9250_ReadGyroData(int16_t *);
 void mpu9250_ReadMagData(int16_t *);
@@ -247,7 +247,5 @@ int16_t mpu9250_ReadTempData();
 void mpu9250_ResetMPU9250();
 void mpu9250_InitAK8963(float *);
 void mpu9250_CalibrateMPU9250();
-
-
 
 #endif /* INC_MPU9250_H_ */

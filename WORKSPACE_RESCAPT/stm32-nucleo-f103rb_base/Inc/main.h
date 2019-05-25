@@ -30,16 +30,25 @@
 
 #include "util.h"
 
+#include "madgwickAHR.h"
 
+typedef struct _MsgRcv {
+	unsigned char fromId;
+	unsigned char toId;
+	int len;
+	unsigned char data;
+	unsigned char order;
+	} MsgRcv;
 
-
-
-void send_can(int id, unsigned char *data, int len);
+MsgRcv receive_can(void);
+void get_acceleroscope_gyroscope();
+void send_can(int from_id, int to_id, char data_type, unsigned char *data, int len);
 void send_temperature(void);
 void send_pressure(void);
 void send_distance(void);
 void send_lux(void);
 void send_wind_speed(void);
+void send_axes(void);
 
 
 /* Exported macro ------------------------------------------------------------*/

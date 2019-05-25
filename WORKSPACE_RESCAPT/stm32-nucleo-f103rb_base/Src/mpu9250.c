@@ -81,7 +81,7 @@ uint8_t mpu9250_MagWhoAmI(void)
 //================================================================
 //				STEP
 //================================================================
-void mpu9250_Step(void)
+void mpu9250_Step(int16_t * destination)
 {
 		uint8_t Buf[14];
 
@@ -109,7 +109,13 @@ void mpu9250_Step(void)
 		gy = gy + gyro_bias_int[1];
 		gz = gz - gyro_bias_int[2];
 
-		
+		destination[0] = ax;
+		destination[1] = ay;
+		destination[2] = az;
+		destination[3] = gx;
+		destination[4] = gy;
+		destination[5] = gz;
+
 #if USE_MAGNETOMETER
 	   	//_____________________
 	    // :::  Magnetometer :::
@@ -127,8 +133,10 @@ void mpu9250_Step(void)
     	int16_t my=-(Mag[1]<<8 | Mag[0]);
     	int16_t mz=-(Mag[5]<<8 | Mag[4]);
     	
+		destination[6] = mx;
+		destination[7] = my;
+		destination[8] = mz;
 #endif
-		
   }
 //================================================================
 //			READ ACCELERATION

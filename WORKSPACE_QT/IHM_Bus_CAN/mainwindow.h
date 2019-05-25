@@ -7,7 +7,7 @@
 #include <fcntl.h>    // O_RDWR
 #include <objectgl.h>
 
-#define ID_IHM                  0x00
+#define ID_IHM                  0xA0
 #define ID_ANEMO_PRESSURE_CARD  0xC1
 #define ID_LUX_RANGE_CARD       0xC2
 #define ID_IMU_CARD             0xC3
@@ -28,12 +28,17 @@ public:
     void receiveCANMessage();
     void refreshAnemoButton();
     void refreshPressureButton();
-    void sendCANMessage(int id, QList<int> data={0});
+
+    void sendCANMessage(int fromId, int toId, unsigned char order, QList<int> data={0});
 public slots:
+    void updateCanData();
     void onRefreshAnemoButton();
     void onRefreshPressureButton();
     void onAutoRefreshButton(bool state);
+    void onLuminositeButton();
+    void onDistanceButton();
     //void onLux(bool state);
+
     void onTimer_Tick();
 
 protected slots:
@@ -57,6 +62,9 @@ private:
     float windSpeed;
     int distance;
     int lux;
+    bool luxSwitchState;
+    bool distSwitchState;
+    int updateState;
     //ThreadPCAN *thread;
 };
 

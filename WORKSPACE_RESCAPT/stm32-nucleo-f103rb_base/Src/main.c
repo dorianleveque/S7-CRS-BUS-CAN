@@ -1,14 +1,15 @@
 #include "main.h"
 //###################################################################
-#define VL6180X	0
+#define VL6180X	1
 #define MPU9250	0
-#define MPL115A_ANEMO 1
+#define MPL115A_ANEMO 0
 //###################################################################
 
 //====================================================================
 //			CAN ACCEPTANCE FILTER
 //====================================================================
 #define USE_FILTER	1
+#define M_PI  3.14159265358979323846
 // Can accept until 4 Standard IDs
 #define ID_IHM	                0xA0 	// pression sensor
 #define ID_ANEMO_PRESSURE_CARD	0xC1	// anemo sensor
@@ -38,6 +39,10 @@ int switch_state = -1;
 float pressure;
 float temperature;
 float anemo_speed;
+
+float phi;
+float teta;
+float psi;
 //====================================================================
 // >>>>>>>>>>>>>>>>>>>>>>>>>> MAIN <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 //====================================================================
@@ -75,16 +80,15 @@ int main(void)
 	//term_printf("%d",response);
 #endif
 
-
     can_Init();
     can_SetFreq(CAN_BAUDRATE); // CAN BAUDRATE : 500 MHz -- cf Inc/config.h
 #if USE_FILTER
     #if MPL115A_ANEMO
-        can_Filter_list((ID_IHM<<21)|(ID_ANEMO_PRESSURE_CARD<<5) , (ID_IHM<<21)|(ID_ANEMO_PRESSURE_CARD<<5) , CANStandard, 0); // Accept until 4 Standard IDs
+        can_Filter_list((ID_ANEMO_PRESSURE_CARD<<21)|(ID_ANEMO_PRESSURE_CARD<<5) , (ID_ANEMO_PRESSURE_CARD<<21)|(ID_ANEMO_PRESSURE_CARD<<5) , CANStandard, 0); // Accept until 4 Standard IDs
     #elif VL6180X
-        can_Filter_list((ID_IHM<<21)|(ID_LUX_RANGE_CARD<<5) , (ID_IHM<<21)|(ID_LUX_RANGE_CARD<<5) , CANStandard, 0); // Accept until 4 Standard IDs
+        can_Filter_list((ID_LUX_RANGE_CARD<<21)|(ID_LUX_RANGE_CARD<<5) , (ID_LUX_RANGE_CARD<<21)|(ID_LUX_RANGE_CARD<<5) , CANStandard, 0); // Accept until 4 Standard IDs
     #elif MPU9250
-        can_Filter_list((ID_IHM<<21)|(ID_IMU_CARD<<5) , (ID_IHM<<21)|(ID_IMU_CARD<<5) , CANStandard, 0); // Accept until 4 Standard IDs
+        can_Filter_list((ID_IMU_CARD<<21)|(ID_IMU_CARD<<5) , (ID_IMU_CARD<<21)|(ID_IMU_CARD<<5) , CANStandard, 0); // Accept until 4 Standard IDs
     #else
         can_Filter_list((ID_IHM<<21)|(ID_ANEMO_PRESSURE_CARD<<5) , (ID_LUX_RANGE_CARD<<21)|(ID_IMU_CARD<<5) , CANStandard, 0); // Accept until 4 Standard IDs
     #endif
@@ -118,7 +122,11 @@ int main(void)
 #endif
 
 #if MPU9250
+
+    get_acceleroscope_gyroscope();
     HAL_Delay(2);
+
+    send_axes();
 #endif
 
 #if MPL115A_ANEMO
@@ -128,24 +136,65 @@ int main(void)
     temperature = m.temperature;
     anemo_speed = anemo_GetSpeed(1);
 
-    send_pressure();
+    /*send_pressure();
     HAL_Delay(50);
     send_temperature();
     HAL_Delay(50);
     send_wind_speed();
-    HAL_Delay(50);
+    HAL_Delay(50);*/
 #endif
     }
 	return 0;
 }
 
-void send_can(int id, unsigned char *data, int len)
+void get_acceleroscope_gyroscope() {
+	// get accelerometer and gyroscope
+	int16_t data[6];
+	mpu9250_Step(data);
+
+	float ax = data[0]*(4.0/32768.0);
+	float ay = data[1]*(4.0/32768.0);
+	float az = data[2]*(4.0/32768.0);
+
+	float gx = data[3]*(1000.0/32768.0)*(M_PI/180.0);
+	float gy = data[4]*(1000.0/32768.0)*(M_PI/180.0);
+	float gz = data[5]*(1000.0/32768.0)*(M_PI/180.0);
+
+	// correction Euler
+	madgwickAHRSupdateIMU(gx,gy,gz,ax,ay,az);
+
+	float R11 = q0*q0 + q1*q1 - q2*q2 - q3*q3;
+	float R12 = 2*(q1*q2 - q0* q3);
+	float R13 = 2*(q1*q3 + q0*q2);
+
+	float R21 = 2*(q0*q3 + q1*q2);
+	float R22 = q0*q0 - q1*q1 + q2*q2 -q3*q3;
+	float R23 = 2*(q2*q3 - q0*q1);
+
+	float R31 = 2*(q1*q3 - q0*q2);
+	float R32 = 2*(q2*q3 + q0*q1);
+	float R33 = q0*q0 - q1*q1 - q2*q2 + q3*q3;
+
+	// Calcul des angle d'Euler a partir de la matrice de rotation(angle en degré)
+	phi 	= atan2(-R31, R33)*(180.0/M_PI);
+	teta 	= (asin(R32)*(180.0/M_PI));
+	psi 	= atan2(-R12,R22)*(180.0/M_PI);
+}
+
+
+
+////////////////////////////////
+// SEND FUNCTIONS
+
+void send_can(int from_id, int to_id, char data_type, unsigned char *data, int len)
 {
-	txMsg.id = id;
-	txMsg.len=len;
+	txMsg.id = to_id;
+	txMsg.len=len+2;
+	txMsg.data[0] = from_id;
+	txMsg.data[1] = (unsigned char) data_type;
 
 	for (int i=0; i<len; i++) {
-		txMsg.data[i] = data[i];
+		txMsg.data[i+2] = data[i];
 	}
 
 	txMsg.format = CANStandard;
@@ -156,67 +205,114 @@ void send_can(int id, unsigned char *data, int len)
 void send_temperature(void)
 {
 	unsigned char data[] = {
-		(unsigned char) 'T',
+		//(unsigned char) 'T',
 		(unsigned char) temperature>>24,
 		(unsigned char) temperature>>16,
 		(unsigned char) temperature>>8,
 		(unsigned char) temperature & 0x000000FF
 	};
-	send_can(ID_ANEMO_PRESSURE_CARD, data, (int) sizeof(data) / sizeof(data[0]));
+	send_can(ID_ANEMO_PRESSURE_CARD, ID_IHM, 'T', data, (int) sizeof(data) / sizeof(data[0]));
 	term_printf("Temperature: %f °C\n", temperature);
 }
 
 void send_pressure(void)
 {
 	unsigned char data[] = {
-		(unsigned char) 'P',
+		//(unsigned char) 'P',
 		(unsigned char) pressure>>24,
 		(unsigned char) pressure>>16,
 		(unsigned char) pressure>>8,
 		(unsigned char) pressure & 0x000000FF
 	};
-	send_can(ID_ANEMO_PRESSURE_CARD, data, (int) sizeof(data) / sizeof(data[0]));
+	send_can(ID_ANEMO_PRESSURE_CARD, ID_IHM, 'P', data, (int) sizeof(data) / sizeof(data[0]));
 	term_printf("Pressure: %f kPa\n", pressure);
 }
 
 void send_wind_speed(void)
 {
 	unsigned char data[] = {
-		(unsigned char) 'W',
+		//(unsigned char) 'W',
 		(unsigned char) anemo_speed>>24,
 		(unsigned char) anemo_speed>>16,
 		(unsigned char) anemo_speed>>8,
 		(unsigned char) anemo_speed & 0x000000FF
 	};
-	send_can(ID_ANEMO_PRESSURE_CARD, data, (int) sizeof(data) / sizeof(data[0]));
+	send_can(ID_ANEMO_PRESSURE_CARD, ID_IHM, 'W', data, (int) sizeof(data) / sizeof(data[0]));
 	term_printf("Wind Speed: %f km/h\n", anemo_speed);
 }
 
 void send_distance(void)
 {
 	unsigned char data[] = {
-		(unsigned char) 'D',
+		//(unsigned char) 'D',
 		(unsigned char) Range.range_mm>>24,
 		(unsigned char) Range.range_mm>>16,
 		(unsigned char) Range.range_mm>>8,
 		(unsigned char) Range.range_mm & 0x000000FF
 	};
-	send_can(ID_LUX_RANGE_CARD, data, (int) sizeof(data) / sizeof(data[0]));
+	send_can(ID_LUX_RANGE_CARD, ID_IHM, 'D', data, (int) sizeof(data) / sizeof(data[0]));
 	term_printf("distance: %d mm\n", Range.range_mm);
 }
 
 void send_lux(void)
 {
 	unsigned char data[] = {
-		(unsigned char) 'L',
+		//(unsigned char) 'L',
 		(unsigned char) Als.lux>>24,
 		(unsigned char) Als.lux>>16,
 		(unsigned char) Als.lux>>8,
 		(unsigned char) Als.lux & 0x000000FF
 	};
-	send_can(ID_LUX_RANGE_CARD, data, (int) sizeof(data) / sizeof(data[0]));
+	send_can(ID_LUX_RANGE_CARD, ID_IHM, 'L', data, (int) sizeof(data) / sizeof(data[0]));
 	term_printf("Lux: %d lux\n", Als.lux);
 }
+
+void send_axes(void)
+{
+	unsigned char data[] = {
+		//(unsigned char) 'A',
+		(unsigned char) ( (int) (phi) )>>8,
+		(unsigned char) ( (int) (phi) )& 0x000000FF,
+		(unsigned char) ( (int) (psi) )>>8,
+		(unsigned char) ( (int) (psi) ) & 0x000000FF,
+		(unsigned char) ( (int) (teta) )>>8,
+		(unsigned char) ( (int) (teta) ) & 0x000000FF
+	};
+	send_can(ID_LUX_RANGE_CARD, ID_IHM, 'A', data, (int) sizeof(data) / sizeof(data[0]));
+    term_printf("roulis = %f \n", phi);
+	term_printf("lacet = %f \n", psi);
+	term_printf("tangage = %f \n", teta);
+}
+
+// END SEND FUNCTIONS
+////////////////////////////////
+
+////////////////////////////////
+// RECEIVE FUNCTION
+
+MsgRcv receive_can(void)
+{
+	CAN_Message msg_rcv;
+	int lenMsg;
+	lenMsg = can_Read(&msg_rcv);
+
+	int data;
+	for (int i=2; i<lenMsg; i++) {
+		data |= msg_rcv.data[i] << (32-8*(i-1));
+
+	}
+
+	MsgRcv m;
+	m.fromId = msg_rcv.data[0];
+	m.toId 	=  msg_rcv.id;
+	m.len 	= lenMsg;
+	m.data 	= data;
+	m.order 	= msg_rcv.data[1];
+	return m;
+}
+// END RECEIVE FUNCTION
+////////////////////////////////
+
 
 //====================================================================
 //			CAN CALLBACK RECEPT
@@ -225,44 +321,52 @@ void send_lux(void)
 void can_callback(void)
 {
 //envoi des données CAN
-/*#if MPL115A_ANEMO
+	MsgRcv msg_rcv;
+	msg_rcv = receive_can();
 
-	CAN_Message msg_rcv;
-	int lenMsg;
-	lenMsg = can_Read(&msg_rcv);
+	term_printf("fromID %x\n", (int)msg_rcv.fromId);
+	term_printf("toId %x\n", (int)msg_rcv.toId);
+	term_printf("data %d\n", (int)msg_rcv.data);
+	term_printf("len %x\n", (int)msg_rcv.len);
+	term_printf("order %x\n", (int)msg_rcv.order);
 
-	for(int i=0; i<lenMsg; i++) {
-		switch(msg_rcv.data[i]) {
+
+
+	if (msg_rcv.fromId == (unsigned char) ID_IHM)
+	{
+	term_printf("yolo\n");
+		switch(msg_rcv.order)
+		{
+#if MPL115A_ANEMO
 		case (unsigned char) 'P':
 			send_pressure();
-		break;
+			break;
 		case (unsigned char) 'T':
 			send_temperature();
-		break;
-	}
-
-
+			break;
+		case (unsigned char) 'W':
+			send_wind_speed();
+			break;
 #endif
 #if VL6180X
-
-	CAN_Message msg_rcv;
-	int lenMsg;
-	lenMsg = can_Read(&msg_rcv);
-
-	for(int i=0; i<lenMsg; i++) {
-		switch(msg_rcv.data[i]) {
 		case (unsigned char) 'L':
 			send_lux();
-		break;
+			break;
 		case (unsigned char) 'D':
 			send_distance();
-		break;
-
+			break;
+		case (unsigned char) 'X':
+			term_printf("X = %d", (int)msg_rcv.data);
+#endif
+#if MPU9250
+		case (unsigned char) 'A':
+			send_axes();
+			break;
+#endif
+		}
 	}
-
-#endif*/
-
 }
+
 //====================================================================
 //			TIMER CALLBACK PERIOD
 //====================================================================
@@ -270,7 +374,7 @@ void can_callback(void)
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
     anemo_ResetCount();
-	term_printf("Anemometer speed: %d km/h\n", (int)anemo_speed);
+	//term_printf("Anemometer speed: %d km/h\n", (int)anemo_speed);
     //term_printf("Pressure: %d kPa\n", (int)pressure);
 
 }
@@ -334,12 +438,12 @@ void VL6180x_Step(void)
     switch (State.mode) {
     case RunRangePoll:
         RangeState();
-        send_distance();
+        //send_distance();
         break;
 
     case RunAlsPoll:
         AlsState();
-        send_lux();
+        //send_lux();
         break;
 
     case InitErr:
