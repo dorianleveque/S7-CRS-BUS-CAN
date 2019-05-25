@@ -5,7 +5,7 @@
 #include <QTimer>
 #include <libpcan.h>
 #include <fcntl.h>    // O_RDWR
-//#include "threadpcan.h"
+#include <objectgl.h>
 
 #define ID_IHM                  0x00
 #define ID_ANEMO_PRESSURE_CARD  0xC1
@@ -35,6 +35,14 @@ public slots:
     void onAutoRefreshButton(bool state);
     //void onLux(bool state);
     void onTimer_Tick();
+
+protected slots:
+    // Redraw the scene
+    void                    onTimer_UpdateDisplay();
+
+protected:
+    // Overload of the resize event
+    void                    resizeEvent(QResizeEvent *);
 
 private:
     Ui::MainWindow *ui;
