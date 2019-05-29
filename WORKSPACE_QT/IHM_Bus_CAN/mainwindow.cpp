@@ -46,12 +46,12 @@ void MainWindow::openCANPort()
 
 void MainWindow::refreshPressureButton()
 {
-    sendCANMessage(ID_IHM, ID_ANEMO_PRESSURE_CARD, {'P'});
+    sendCANMessage(ID_IHM, ID_ANEMO_PRESSURE_CARD, {'B'});
 }
 
 void MainWindow::refreshAnemoButton()
 {
-    sendCANMessage(ID_IHM, ID_LUX_RANGE_CARD, 'X', { 0x00, 0x32 });
+    sendCANMessage(ID_IHM, ID_LUX_RANGE_CARD, 'X', { 0x00 });
 }
 
 void MainWindow::sendCANMessage(int fromId, int toId, unsigned char order, QList<int> data)
