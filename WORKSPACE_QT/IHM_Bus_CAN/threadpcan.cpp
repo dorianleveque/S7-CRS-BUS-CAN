@@ -1,4 +1,4 @@
-#include "threadPcan.h"
+#include "threadpcan.h"
 
 ThreadPCAN::ThreadPCAN(QObject *parent) : QThread(parent)
 {
@@ -9,13 +9,19 @@ void ThreadPCAN::run()
 {
     while(!this->stopRequest) {
         LINUX_CAN_Read_Timeout(h, &pMsgBuff, -1);
-        int toid = int(pMsgBuff.Msg.ID);
+        int toId = int(pMsgBuff.Msg.ID);
         int lenght = int(pMsgBuff.Msg.LEN);
         int fromId = int(pMsgBuff.Msg.DATA[0]);
         char data_type = char(pMsgBuff.Msg.DATA[1]);
-        QList<int> data_tmp;
+        QList<int> data;
+
+        for(int i=2; i<lenght; i++)
+        {
+            data.append(int(pMsgBuff.Msg.DATA[i]));
+        }
+
         //printf("ID: %d lenght: %d\n", id, lenght);
-        emit newPcanMessage(fromId, data_type, data_tmp, lenght);
+        emit newPcanMessage(fromId, data_type, data, lenght-2);
     }
     emit terminate();
 }

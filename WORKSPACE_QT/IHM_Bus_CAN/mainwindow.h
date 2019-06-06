@@ -5,7 +5,7 @@
 #include <QTimer>
 //#include <fcntl.h>    // O_RDWR
 //#include <objectgl.h>
-#include "threadPcan.h"
+#include "threadpcan.h"
 
 #define ID_IHM                  0xA0
 #define ID_ANEMO_PRESSURE_CARD  0xC1
@@ -26,17 +26,12 @@ public:
     ~MainWindow();
 
 public slots:
-    void updateCanData(int value);
-
+    void onRefreshCanData();
     void onReceiveCANMessage(int fromid, char data_type, QList<int> data_tmp, int len);
     void onRefreshAnemoButton();
     void onRefreshPressureButton();
-    void onAutoRefreshButton(bool state);
-    void onLuminositeButton();
-    void onDistanceButton();
-    //void onLux(bool state);
-
-    //void onTimer_Tick();
+    void onLuxButton();
+    void onRangeButton();
 
 protected slots:
     // Redraw the scene
@@ -51,16 +46,15 @@ private:
     //TPCANRdMsg pMsgBuff;
     ThreadPCAN *th_receiver;
 
-    QTimer *timer_tick;
+    QTimer *refresh_timer;
     QTimer *timer2_tick;
 
     float pressure;
     float temperature;
     float windSpeed;
-    int distance;
-    int lux;
-    bool luxSwitchState;
-    bool distSwitchState;
+    float range;
+    float lux;
+    bool luxSelectState;
     int updateState;
 };
 

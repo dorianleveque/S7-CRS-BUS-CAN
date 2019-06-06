@@ -27,11 +27,11 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-        threadPcan.cpp
+        threadpcan.cpp
 
 HEADERS += \
         mainwindow.h \
-        threadPcan.h
+        threadpcan.h
 
 FORMS += \
         mainwindow.ui

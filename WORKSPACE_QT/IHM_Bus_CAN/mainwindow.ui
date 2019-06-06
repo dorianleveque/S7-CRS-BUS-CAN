@@ -16,7 +16,7 @@
   <widget class="QWidget" name="centralWidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
-     <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,1">
+     <layout class="QVBoxLayout" name="verticalLayout" stretch="0,1">
       <item>
        <widget class="QLabel" name="label">
         <property name="minimumSize">
@@ -46,21 +46,6 @@
          <enum>Qt::PlainText</enum>
         </property>
         <property name="scaledContents">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="autoRefreshButton">
-        <property name="font">
-         <font>
-          <pointsize>9</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Rafraichissement automatique</string>
-        </property>
-        <property name="checked">
          <bool>true</bool>
         </property>
        </widget>
@@ -146,11 +131,25 @@
             </spacer>
            </item>
            <item>
-            <widget class="QLineEdit" name="lumDistanceField">
-             <property name="readOnly">
-              <bool>true</bool>
+            <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="2,1">
+             <property name="topMargin">
+              <number>0</number>
              </property>
-            </widget>
+             <item>
+              <widget class="QLineEdit" name="luxRangeField">
+               <property name="readOnly">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="luxRangeLabel">
+               <property name="text">
+                <string>TextLabel</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </item>
            <item>
             <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -336,7 +335,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>262</x>
-     <y>168</y>
+     <y>144</y>
     </hint>
     <hint type="destinationlabel">
      <x>406</x>
@@ -352,7 +351,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>523</x>
-     <y>168</y>
+     <y>144</y>
     </hint>
     <hint type="destinationlabel">
      <x>890</x>
@@ -361,30 +360,14 @@
    </hints>
   </connection>
   <connection>
-   <sender>autoRefreshButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>MainWindow</receiver>
-   <slot>onAutoRefreshButton(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>29</x>
-     <y>92</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>16</x>
-     <y>113</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>lux_button</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
-   <slot>onLuminositeButton()</slot>
+   <slot>onLuxButton()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>64</x>
-     <y>387</y>
+     <x>97</x>
+     <y>380</y>
     </hint>
     <hint type="destinationlabel">
      <x>13</x>
@@ -396,11 +379,11 @@
    <sender>distance_button</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
-   <slot>onDistanceButton()</slot>
+   <slot>onRangeButton()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>69</x>
-     <y>423</y>
+     <x>102</x>
+     <y>407</y>
     </hint>
     <hint type="destinationlabel">
      <x>12</x>
@@ -413,7 +396,7 @@
   <slot>onRefreshAnemoButton()</slot>
   <slot>onRefreshPressureButton()</slot>
   <slot>onAutoRefreshButton(bool)</slot>
-  <slot>onLuminositeButton()</slot>
-  <slot>onDistanceButton()</slot>
+  <slot>onLuxButton()</slot>
+  <slot>onRangeButton()</slot>
  </slots>
 </ui>

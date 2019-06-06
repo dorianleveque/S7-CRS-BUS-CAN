@@ -20,7 +20,7 @@ protected:
     void run();
 
 signals:
-    void newPcanMessage(int fromid, char data_type, QList<int> data_tmp, int len);
+    void newPcanMessage(int fromid, char data_type, QList<int> data, int len);
     void terminate();
 
 public slots:
@@ -33,8 +33,6 @@ private:
 
 
 };
-
-Q_DECLARE_METATYPE(TPCANRdMsg);
 
 #endif // THREAD_PCAN_H
 
