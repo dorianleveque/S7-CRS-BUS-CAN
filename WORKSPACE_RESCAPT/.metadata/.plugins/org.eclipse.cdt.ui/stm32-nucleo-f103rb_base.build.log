@@ -1,50 +1,6 @@
-19:49:43 **** Incremental Build of configuration Default for project stm32-nucleo-f103rb_base ****
+14:19:04 **** Incremental Build of configuration Default for project stm32-nucleo-f103rb_base ****
 make all 
-arm-none-eabi-gcc -IInc/ -IDrivers/STM32F1xx_HAL_Driver/Inc/ -ISrc/vl6180x/ -IDrivers/BSP/STM32F1xx_Nucleo/ -IDrivers/CMSIS/Device/ST/STM32F1xx/Include/ -IDrivers/CMSIS/Include/ -DSTM32F103xBt -ggdb -O3 -mlittle-endian --specs=rdimon.specs -mthumb -mcpu=cortex-m3 -mthumb-interwork -Wl,--gc-sections -lgcc -lc -lm -lrdimon -Wall -Wextra -Warray-bounds -Wno-unused-parameter -TDevice/gcc.ld Src/main.c Device/startup_stm32f103xb.s Src/vl6180x/vl6180x_api.c Src/vl6180x/vl6180x_lib.c Src/vl6180x/x-nucleo-6180xa1.c Src/stm32f1xx_hal_msp.c Src/stm32f1xx_it.c Src/system_stm32f1xx.c Src/systemClock.c Src/drv_can.c Src/drv_spi.c Src/drv_uart.c Src/drv_i2c.c Src/anemo.c Src/mpu9250.c Src/tickTimer.c Src/util.c Src/madgwickAHRS.c stm32f1xx_hal.o stm32f1xx_hal_rcc.o stm32f1xx_hal_rcc_ex.o stm32f1xx_hal_rtc.o stm32f1xx_hal_gpio.o stm32f1xx_hal_cortex.o stm32f1xx_hal_pcd.o stm32f1xx_hal_pcd_ex.o stm32f1xx_hal_uart.o stm32f1xx_hal_usart.o stm32f1xx_hal_dma.o stm32f1xx_hal_adc.o stm32f1xx_hal_adc_ex.o stm32f1xx_hal_spi.o stm32f1xx_hal_i2c.o stm32f1xx_hal_tim.o stm32f1xx_hal_tim_ex.o stm32f1xx_hal_can.o Drivers/BSP/STM32F1xx_Nucleo/stm32f1xx_nucleo.o -o template.elf
-Src/main.c: In function 'get_acceleroscope_gyroscope':
-Src/main.c:172:8: warning: unused variable 'R23' [-Wunused-variable]
-  float R23 = 2*(q2*q3 - q0*q1);
-        ^
-Src/main.c:170:8: warning: unused variable 'R21' [-Wunused-variable]
-  float R21 = 2*(q0*q3 + q1*q2);
-        ^
-Src/main.c:168:8: warning: unused variable 'R13' [-Wunused-variable]
-  float R13 = 2*(q1*q3 + q0*q2);
-        ^
-Src/main.c:166:8: warning: unused variable 'R11' [-Wunused-variable]
-  float R11 = q0*q0 + q1*q1 - q2*q2 - q3*q3;
-        ^
-Src/main.c: In function 'can_callback':
-Src/main.c:301:8: warning: 'data' may be used uninitialized in this function [-Wmaybe-uninitialized]
-   data |= msg_rcv.data[i] << (32-8*(i-1));
-        ^
-Src/main.c:299:6: note: 'data' was declared here
-  int data;
-      ^
-Src/main.c: In function 'receive_can':
-Src/main.c:301:8: warning: 'data' may be used uninitialized in this function [-Wmaybe-uninitialized]
-   data |= msg_rcv.data[i] << (32-8*(i-1));
-        ^
-Src/vl6180x/vl6180x_api.c: In function 'VL6180x_RangeIgnoreSetEnable':
-Src/vl6180x/vl6180x_api.c:1598:9: warning: 'status' may be used uninitialized in this function [-Wmaybe-uninitialized]
-  return status;
-         ^
-Src/drv_i2c.c: In function 'i2c1_WriteReg16Word32':
-Src/drv_i2c.c:144:11: warning: array subscript is above array bounds [-Warray-bounds]
-     buffer[4]=(data>>8)&0xFF;;
-           ^
-Src/drv_i2c.c:145:11: warning: array subscript is above array bounds [-Warray-bounds]
-     buffer[5]=data&0xFF;
-           ^
-Src/madgwickAHRS.c: In function 'invSqrt':
-Src/madgwickAHRS.c:218:5: warning: dereferencing type-punned pointer will break strict-aliasing rules [-Wstrict-aliasing]
-     long i = *(long*)&y;
-     ^
-Src/madgwickAHRS.c:220:5: warning: dereferencing type-punned pointer will break strict-aliasing rules [-Wstrict-aliasing]
-     y = *(float*)&i;
-     ^
-arm-none-eabi-objcopy -O ihex template.elf   template.hex
-arm-none-eabi-objcopy -O binary template.elf template.bin
+make: Nothing to be done for `all'.
 
-19:49:45 Build Finished (took 2s.467ms)
+14:19:04 Build Finished (took 62ms)
 

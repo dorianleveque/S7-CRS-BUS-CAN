@@ -768,7 +768,7 @@
 					<entry kind="macro" name="__GNUC_PATCHLEVEL__" value="5">
 						<flag value="BUILTIN|READONLY"/>
 					</entry>
-					<entry kind="macro" name="__GNUC_RH_RELEASE__" value="11">
+					<entry kind="macro" name="__GNUC_RH_RELEASE__" value="36">
 						<flag value="BUILTIN|READONLY"/>
 					</entry>
 					<entry kind="macro" name="__GNUC__" value="4">
@@ -1146,7 +1146,7 @@
 					<entry kind="macro" name="__USER_LABEL_PREFIX__" value="">
 						<flag value="BUILTIN|READONLY"/>
 					</entry>
-					<entry kind="macro" name="__VERSION__" value="&quot;4.8.5 20150623 (Red Hat 4.8.5-11)&quot;">
+					<entry kind="macro" name="__VERSION__" value="&quot;4.8.5 20150623 (Red Hat 4.8.5-36)&quot;">
 						<flag value="BUILTIN|READONLY"/>
 					</entry>
 					<entry kind="macro" name="__WCHAR_MAX__" value="2147483647">
@@ -1514,7 +1514,7 @@
 					<entry kind="macro" name="__GNUC_PATCHLEVEL__" value="5">
 						<flag value="BUILTIN|READONLY"/>
 					</entry>
-					<entry kind="macro" name="__GNUC_RH_RELEASE__" value="11">
+					<entry kind="macro" name="__GNUC_RH_RELEASE__" value="36">
 						<flag value="BUILTIN|READONLY"/>
 					</entry>
 					<entry kind="macro" name="__GNUC__" value="4">
@@ -1901,7 +1901,7 @@
 					<entry kind="macro" name="__USER_LABEL_PREFIX__" value="">
 						<flag value="BUILTIN|READONLY"/>
 					</entry>
-					<entry kind="macro" name="__VERSION__" value="&quot;4.8.5 20150623 (Red Hat 4.8.5-11)&quot;">
+					<entry kind="macro" name="__VERSION__" value="&quot;4.8.5 20150623 (Red Hat 4.8.5-36)&quot;">
 						<flag value="BUILTIN|READONLY"/>
 					</entry>
 					<entry kind="macro" name="__WCHAR_MAX__" value="2147483647">

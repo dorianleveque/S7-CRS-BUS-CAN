@@ -3,7 +3,6 @@
 
 #include <QMainWindow>
 #include <QTimer>
-#include <pcan.h>
 //#include <fcntl.h>    // O_RDWR
 //#include <objectgl.h>
 #include "threadPcan.h"
