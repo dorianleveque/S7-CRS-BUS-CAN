@@ -16,6 +16,17 @@ MainWindow::MainWindow(QWidget *parent) :
     refresh_timer = new QTimer();
     refresh_timer->start(10); // 10ms
     connect(refresh_timer, SIGNAL(timeout()), this, SLOT(onRefreshCanData()));
+
+    // Create the openGL display for the map
+    Object_GL = new ObjectOpenGL();
+    Object_GL->setObjectName(QString::fromUtf8("ObjectOpenGL"));
+    Object_GL->setGeometry(QRect(0, 0, this->width(), this->height()));
+    ui->IMU_layout->addWidget(Object_GL, 0, 0, 1, 1);
+
+
+    timerDisplay = new QTimer();
+    timerDisplay->connect(timerDisplay, SIGNAL(timeout()),this, SLOT(onTimer_UpdateDisplay()));
+    timerDisplay->start(50);
 }
 
 MainWindow::~MainWindow()
@@ -66,6 +77,14 @@ void MainWindow::onReceiveCANMessage(int fromId, char data_type, QList<int> data
             ui->luxRangeLabel->setText("mm");
         }
         break;
+    case ID_IMU_CARD:
+        if (data_type == 'A')
+        {
+            phiAngle = data[0]<<8 | data[1];
+            psiAngle = data[0]<<8 | data[1];
+            tetaAngle = data[0]<<8 | data[1];
+            Object_GL->setAngles(phiAngle, psiAngle, tetaAngle);
+        }
     }
 }
 
@@ -80,7 +99,7 @@ void MainWindow::onRefreshCanData() {
         case 1: th_receiver->sendCANMessage(ID_IHM, ID_ANEMO_PRESSURE_CARD, 'T'); break;
         case 2: th_receiver->sendCANMessage(ID_IHM, ID_ANEMO_PRESSURE_CARD, 'W'); break;
         case 3: th_receiver->sendCANMessage(ID_IHM, ID_LUX_RANGE_CARD, 'D'); break;
-        case 4: th_receiver->sendCANMessage(ID_IHM, ID_LUX_RANGE_CARD, 'A'); break;
+        case 4: th_receiver->sendCANMessage(ID_IHM, ID_IMU_CARD, 'A'); break;
         default: updateState=0;
     }
     updateState++;
@@ -106,4 +125,15 @@ void MainWindow::onRangeButton()
 {
     luxSelectState = false;
     th_receiver->sendCANMessage(ID_IHM, ID_LUX_RANGE_CARD, 'X', { 0x00 });
+}
+
+void MainWindow::resizeEvent(QResizeEvent *)
+{
+    Object_GL->resize(this->width(),this->height());
+    //gridLayoutWidget->setGeometry(QRect(0, 0, centralWidget->width(), centralWidget->height()));
+}
+
+void MainWindow::onTimer_UpdateDisplay()
+{
+    Object_GL->updateGL();
 }

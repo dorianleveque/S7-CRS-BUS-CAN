@@ -4,7 +4,7 @@
 #include <QMainWindow>
 #include <QTimer>
 //#include <fcntl.h>    // O_RDWR
-//#include <objectgl.h>
+#include <objectgl.h>
 #include "threadpcan.h"
 
 #define ID_IHM                  0xA0
@@ -35,19 +35,21 @@ public slots:
 
 protected slots:
     // Redraw the scene
-    //void onTimer_UpdateDisplay();
+    void onTimer_UpdateDisplay();
 
 protected:
     // Overload of the resize event
-    //void resizeEvent(QResizeEvent *);
+    void resizeEvent(QResizeEvent *);
 
 private:
     Ui::MainWindow *ui;
-    //TPCANRdMsg pMsgBuff;
     ThreadPCAN *th_receiver;
 
     QTimer *refresh_timer;
-    QTimer *timer2_tick;
+    QTimer *timerDisplay;
+
+    // OpenGL object
+    ObjectOpenGL *Object_GL;
 
     float pressure;
     float temperature;
@@ -56,6 +58,10 @@ private:
     float lux;
     bool luxSelectState;
     int updateState;
+
+    int phiAngle;
+    int psiAngle;
+    int tetaAngle;
 };
 
 #endif // MAINWINDOW_H

@@ -284,7 +284,7 @@ void send_axes(void)
 		(unsigned char) ( (int) (teta) )>>8,
 		(unsigned char) ( (int) (teta) ) & 0x000000FF
 	};
-	send_can(ID_IMU_CARD, ID_IHM, 'A', data, (int) sizeof(data) / sizeof(data[0]));
+	send_can(ID_LUX_RANGE_CARD, ID_IHM, 'A', data, (int) sizeof(data) / sizeof(data[0]));
     term_printf("roulis = %f \n", phi);
 	term_printf("lacet = %f \n", psi);
 	term_printf("tangage = %f \n", teta);

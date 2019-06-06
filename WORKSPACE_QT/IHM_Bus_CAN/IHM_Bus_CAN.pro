@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui serialbus
+QT       += core gui serialbus opengl
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -27,11 +27,13 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-        threadpcan.cpp
+        threadpcan.cpp \
+        objectgl.cpp
 
 HEADERS += \
         mainwindow.h \
-        threadpcan.h
+        threadpcan.h \
+        objectgl.h
 
 FORMS += \
         mainwindow.ui
