@@ -2,8 +2,6 @@
 #include "ui_mainwindow.h"
 #include <QDebug>
 
-#define DEFAULT_NODE "/dev/pcanusb32"
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -11,18 +9,19 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     this->setWindowTitle("BusCAN");
 
-    openCANPort();
+    th_receiver = new ThreadPCAN();
+    th_receiver -> start();
+    connect(th_receiver, SIGNAL(newPcanMessage(int, char, QList<int>, int)), this, SLOT(onReceiveCANMessage(int, char, QList<int>, int)));
 
-    timer_tick = new QTimer();
+    //timer_tick = new QTimer();
     timer2_tick= new QTimer();
-    connect(timer_tick, SIGNAL(timeout()), this, SLOT(onTimer_Tick()));
-    connect(timer2_tick, SIGNAL(timeout()), this, SLOT(updateCanData()));
+    //connect(timer2_tick, SIGNAL(timeout()), this, SLOT(updateCanData()));
 
-    timer_tick -> start(10); // 1ms
+    //timer_tick -> start(10); // 1ms
     //timer2_tick -> start(10);
 
-    /*thread = new threadPCAN(this);
-    thread.run();*/
+    //connect(receivePcanThread, SIGNAL(valueChanged()), this, SLOT(updateCanData()));
+    //receivePcanThread->start();
 }
 
 MainWindow::~MainWindow()
@@ -30,54 +29,11 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-
-void MainWindow::openCANPort()
-{
-    const char *szDevNode = DEFAULT_NODE;
-
-    h=LINUX_CAN_Open(szDevNode, O_RDWR);
-    if (!h)
-        {
-            printf("can't open %s\n", szDevNode);
-        }
-    CAN_Init(h, CAN_BAUD_500K,  CAN_INIT_TYPE_ST);         // BTR0BTR1	bitrate code in hex (default=0x1c (500 kbps))
-    CAN_Status(h); // Clear Status
-}
-
-void MainWindow::refreshPressureButton()
-{
-    sendCANMessage(ID_IHM, ID_ANEMO_PRESSURE_CARD, {'P'});
-}
-
-void MainWindow::refreshAnemoButton()
-{
-    sendCANMessage(ID_IHM, ID_LUX_RANGE_CARD, 'X', { 0x00, 0x32 });
-}
-
-void MainWindow::sendCANMessage(int fromId, int toId, unsigned char order, QList<int> data)
-{
-    TPCANMsg msgBuff;
-
-    msgBuff.ID      =   static_cast<unsigned char>(toId);
-    msgBuff.MSGTYPE =   MSGTYPE_STANDARD;
-    msgBuff.LEN     =   static_cast<unsigned char>(data.length()+1);
-
-    msgBuff.DATA[0] = static_cast<unsigned char>(fromId);
-    msgBuff.DATA[1] = order;
-    for(int i=0; i<data.length(); i++) {
-        msgBuff.DATA[i+2] = static_cast<unsigned char> (data[i]);
-    }
-
-    LINUX_CAN_Write_Timeout(h, &msgBuff,0);
-    //CAN_Write(h, &msgBuff);
-}
-
-
-void MainWindow::receiveCANMessage()
+void MainWindow::onReceiveCANMessage(int fromid, char data_type, QList<int> data_tmp, int len)
 {
     //LINUX_CAN_Read_Timeout(h, &pMsgBuff, -1);
-    LINUX_CAN_Read_Timeout(h, &pMsgBuff, 100);
-    int fromId = int(pMsgBuff.Msg.DATA[0]);
+    //LINUX_CAN_Read_Timeout(h, &pMsgBuff, 100);
+    /*int fromId = int(pMsgBuff.Msg.DATA[0]);
     char data_type = char(pMsgBuff.Msg.DATA[1]);
     int lenght = int(pMsgBuff.Msg.LEN);
     float data_tmp = float (pMsgBuff.Msg.DATA[2]<<24 | pMsgBuff.Msg.DATA[3]<<16 | pMsgBuff.Msg.DATA[4]<<8 | pMsgBuff.Msg.DATA[5]);
@@ -112,14 +68,14 @@ void MainWindow::receiveCANMessage()
             break;
         }
         break;
-    }
+    }*/
 }
 
 
 /////////////////
 // SLOT
 
-void MainWindow::updateCanData() {
+void MainWindow::updateCanData(int value) {
    /* switch(updateState)
     {
         case 0: sendCANMessage(ID_IHM, ID_ANEMO_PRESSURE_CARD, {'P'}); break;
@@ -129,16 +85,17 @@ void MainWindow::updateCanData() {
         default: updateState=0;
     }
     updateState++;*/
+    printf("%d \n", value);
 }
 
 void MainWindow::onRefreshAnemoButton()
 {
-    refreshAnemoButton();
+    th_receiver->sendCANMessage(ID_IHM, ID_LUX_RANGE_CARD, 'X', { 0x00, 0x32 });
 }
 
 void MainWindow::onRefreshPressureButton()
 {
-    refreshPressureButton();
+    th_receiver->sendCANMessage(ID_IHM, ID_ANEMO_PRESSURE_CARD, {'P'});
 }
 
 void MainWindow::onLuminositeButton()
@@ -161,9 +118,4 @@ void MainWindow::onAutoRefreshButton(bool state)
     else {
         timer_tick ->stop();
     }
-}
-
-void MainWindow::onTimer_Tick()
-{
-    receiveCANMessage();
 }

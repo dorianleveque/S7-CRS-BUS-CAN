@@ -3,9 +3,10 @@
 
 #include <QMainWindow>
 #include <QTimer>
-#include <libpcan.h>
-#include <fcntl.h>    // O_RDWR
-#include <objectgl.h>
+#include <pcan.h>
+//#include <fcntl.h>    // O_RDWR
+//#include <objectgl.h>
+#include "threadPcan.h"
 
 #define ID_IHM                  0xA0
 #define ID_ANEMO_PRESSURE_CARD  0xC1
@@ -24,14 +25,11 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    void openCANPort();
-    void receiveCANMessage();
-    void refreshAnemoButton();
-    void refreshPressureButton();
 
-    void sendCANMessage(int fromId, int toId, unsigned char order, QList<int> data={0});
 public slots:
-    void updateCanData();
+    void updateCanData(int value);
+
+    void onReceiveCANMessage(int fromid, char data_type, QList<int> data_tmp, int len);
     void onRefreshAnemoButton();
     void onRefreshPressureButton();
     void onAutoRefreshButton(bool state);
@@ -39,21 +37,21 @@ public slots:
     void onDistanceButton();
     //void onLux(bool state);
 
-    void onTimer_Tick();
+    //void onTimer_Tick();
 
 protected slots:
     // Redraw the scene
-    void                    onTimer_UpdateDisplay();
+    //void onTimer_UpdateDisplay();
 
 protected:
     // Overload of the resize event
-    void                    resizeEvent(QResizeEvent *);
+    //void resizeEvent(QResizeEvent *);
 
 private:
     Ui::MainWindow *ui;
+    //TPCANRdMsg pMsgBuff;
+    ThreadPCAN *th_receiver;
 
-    HANDLE h;
-    TPCANRdMsg pMsgBuff;
     QTimer *timer_tick;
     QTimer *timer2_tick;
 
@@ -65,7 +63,6 @@ private:
     bool luxSwitchState;
     bool distSwitchState;
     int updateState;
-    //ThreadPCAN *thread;
 };
 
 #endif // MAINWINDOW_H

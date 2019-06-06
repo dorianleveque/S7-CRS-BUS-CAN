@@ -1,22 +1,40 @@
-/*#ifndef THREADPCAN_H
-#define THREADPCAN_H
-
+#ifndef THREAD_PCAN_H
+#define THREAD_PCAN_H
 #include <QThread>
+#include <QMetaType>
 #include <libpcan.h>
+#include <fcntl.h>    // O_RDWR
+
+#define DEFAULT_NODE "/dev/pcanusb32"
 
 class ThreadPCAN : public QThread
 {
     Q_OBJECT
+
 public:
-    explicit ThreadPCAN(QObject *parent = nullptr);
+    ThreadPCAN(QObject *parent=0);
+    void openCANPort();
+    void sendCANMessage(int fromId, int toId, unsigned char order, QList<int> data={0});
+
+protected:
+    void run();
 
 signals:
-    void valueChanged(int);
-    void finished();
+    void newPcanMessage(int fromid, char data_type, QList<int> data_tmp, int len);
+    void terminate();
 
 public slots:
-    void run() override;
+    void stop();
+
+private:
+    HANDLE h;
+    TPCANRdMsg pMsgBuff;
+    bool stopRequest =false;
+
+
 };
 
-#endif // THREADPCAN_H
-*/
+Q_DECLARE_METATYPE(TPCANRdMsg);
+
+#endif // THREAD_PCAN_H
+
