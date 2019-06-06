@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
     th_receiver = new ThreadPCAN();
     th_receiver -> start();
     connect(th_receiver, SIGNAL(newPcanMessage(int, char, QList<int>, int)), this, SLOT(onReceiveCANMessage(int, char, QList<int>, int)));
+    connect(th_receiver, SIGNAL(terminate()), this, SLOT(onThreadPcanTerminate()));
 
     refresh_timer = new QTimer();
     refresh_timer->start(10); // 10ms
@@ -118,12 +119,14 @@ void MainWindow::onRefreshPressureButton()
 void MainWindow::onLuxButton()
 {
     luxSelectState = true;
+    ui->luxRangeLabel->setText("lux");
     th_receiver->sendCANMessage(ID_IHM, ID_LUX_RANGE_CARD, 'X', { 0x01 });
 }
 
 void MainWindow::onRangeButton()
 {
     luxSelectState = false;
+    ui->luxRangeLabel->setText("mm");
     th_receiver->sendCANMessage(ID_IHM, ID_LUX_RANGE_CARD, 'X', { 0x00 });
 }
 
@@ -136,4 +139,9 @@ void MainWindow::resizeEvent(QResizeEvent *)
 void MainWindow::onTimer_UpdateDisplay()
 {
     Object_GL->updateGL();
+}
+
+void MainWindow::onThreadPcanTerminate()
+{
+    printf("thread pcan stoped");
 }

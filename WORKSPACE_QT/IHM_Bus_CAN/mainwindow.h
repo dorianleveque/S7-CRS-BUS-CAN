@@ -32,6 +32,7 @@ public slots:
     void onRefreshPressureButton();
     void onLuxButton();
     void onRangeButton();
+    void onThreadPcanTerminate();
 
 protected slots:
     // Redraw the scene

@@ -64,7 +64,7 @@ void ObjectOpenGL::paintGL(  )
     glScalef(1,-1,1);
 
     // Draw Frame
-    Draw_Frame();
+    //Draw_Frame();
 
     // Start display of the items
     glPushMatrix();                // The following properties are only for the object
@@ -96,9 +96,13 @@ void ObjectOpenGL::paintGL(  )
 //=============================================================================================
 // Draw Object
 //=============================================================================================
+#define L0  1.0
 #define L1  0.9
-#define L2  0.4
+#define L2  0.3
 #define L3  0.2
+#define L4  0.8
+#define L5  0.6
+
 
 void ObjectOpenGL::Draw_Box()
 {
@@ -112,48 +116,70 @@ void ObjectOpenGL::Draw_Box()
     glScalef(4.,4.,4.);
     glPopMatrix();
 
-    // Rear View
-    glBegin(GL_POLYGON);
-    qglColor(QColor::fromRgb(0,0,255,128)); // Dark Blue ; 128=Transparency
-    glVertex3d(-L1 ,-L2   ,-L3);
-    glVertex3d(-L1 ,L2    ,-L3);
-    glVertex3d(L1  ,L2    ,0.0);
-    glVertex3d(L1  ,-L2   ,0.0);
+
+    // Left Main Plain View
+    glBegin(GL_TRIANGLES);
+    qglColor(QColor::fromRgb(255,255,0,128)); // yellow
+    glVertex3d(-L1  ,L2    ,L3);
+    glVertex3d(L1   ,0.0     ,0.0);
+    glVertex3d(-L1  ,0.0    ,-L3);
     glEnd();
 
-    // Front View
+    glBegin(GL_TRIANGLES);
+    qglColor(QColor::fromRgb(255,255,0,128)); // yellow
+    glVertex3d(-L1  ,0.0    ,-L3);
+    glVertex3d(L1   ,0.0     ,0.0);
+    glVertex3d(-L1  ,L2    ,L3);
+    glEnd();
+
+    // Right Main Plain View
+    glBegin(GL_TRIANGLES);
+    qglColor(QColor::fromRgb(0,0,255,128)); // Dark Blue
+    glVertex3d(-L1  ,-L2    ,L3);
+    glVertex3d(L1   ,0.0     ,0.0);
+    glVertex3d(-L1  ,0.0    ,-L3);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    qglColor(QColor::fromRgb(0,0,255,128)); // Dark Blue
+    glVertex3d(-L1  ,0.0    ,-L3);
+    glVertex3d(L1   ,0.0     ,0.0);
+    glVertex3d(-L1  ,-L2    ,L3);
+    glEnd();
+
+
+    // aile droite
     glBegin(GL_POLYGON);
     qglColor(QColor::fromRgb(51,255,0,128)); // Green
-    glVertex3d(-L1 ,-L2   ,L3);
-    glVertex3d(L1  ,-L2   ,0.0);
-    glVertex3d(L1  ,L2    ,0.0);
-    glVertex3d(-L1 ,L2    ,L3);
-    glEnd();
-
-    // Left View
-    glBegin(GL_POLYGON);
-    qglColor(QColor::fromRgb(255,255,0,128)); // yellow
     glVertex3d(-L1  ,-L2    ,L3);
-    glVertex3d(-L1  ,L2     ,L3);
-    glVertex3d(-L1  ,L2     ,-L3);
-    glVertex3d(-L1  ,-L2    ,-L3);
+    glVertex3d(L1  ,0.0    ,0.0);
+    glVertex3d(-L5  ,-L1    ,L3);
+    glVertex3d(-L0  ,-L4    ,L3);
     glEnd();
 
-    // Top View
-    glBegin(GL_TRIANGLES);
+    glBegin(GL_POLYGON);
+    qglColor(QColor::fromRgb(51,255,0,128)); // Green
+    glVertex3d(-L0  ,-L4    ,L3);
+    glVertex3d(-L5  ,-L1    ,L3);
+    glVertex3d(L1  ,0.0    ,0.0);
+    glVertex3d(-L1  ,-L2    ,L3);
+    glEnd();
+
+    // aile gauche
+    glBegin(GL_POLYGON);
     qglColor(QColor::fromRgb(255,102,0,128)); // orange
     glVertex3d(-L1  ,L2    ,L3);
-    glVertex3d(L1   ,L2     ,0.0);
-    glVertex3d(-L1  ,L2    ,-L3);
+    glVertex3d(L1   ,0.0     ,0.0);
+    glVertex3d(-L5  ,L1    ,L3);
+    glVertex3d(-L0  ,L4    ,L3);
     glEnd();
 
-
-    // Bottom View
-    glBegin(GL_TRIANGLES);
-    qglColor(QColor::fromRgb(0,255,255,128)); // light blue
-    glVertex3d(-L1  ,-L2    ,L3);
-    glVertex3d(-L1  ,-L2    ,-L3);
-    glVertex3d(L1   ,-L2     ,0.0);
+    glBegin(GL_POLYGON);
+    qglColor(QColor::fromRgb(255,102,0,128)); // orange
+    glVertex3d(-L0  ,L4    ,L3);
+    glVertex3d(-L5  ,L1    ,L3);
+    glVertex3d(L1  ,0.0    ,0.0);
+    glVertex3d(-L1  ,L2    ,L3);
     glEnd();
 
     glPopMatrix();

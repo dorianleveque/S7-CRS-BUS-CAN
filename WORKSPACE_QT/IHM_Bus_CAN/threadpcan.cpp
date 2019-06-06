@@ -34,6 +34,7 @@ void ThreadPCAN::openCANPort()
     if (!h)
         {
             printf("can't open %s\n", szDevNode);
+            this->stopRequest=true;
         }
     CAN_Init(h, CAN_BAUD_500K,  CAN_INIT_TYPE_ST);         // BTR0BTR1	bitrate code in hex (default=0x1c (500 kbps))
     CAN_Status(h); // Clear Status
