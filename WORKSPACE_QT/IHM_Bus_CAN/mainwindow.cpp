@@ -44,15 +44,15 @@ void MainWindow::onReceiveCANMessage(int fromId, char data_type, QList<int> data
         switch (data_type) {
         case 'P':
             tmp_data = data[0]<<24 | data[1]<<16 | data[2]<<8 | data[3];
-            ui -> pressureField -> setText(QString::number((float)tmp_data));
+            ui -> pressureField -> display((float)tmp_data);
             break;
         case 'T':
             tmp_data = data[0]<<24 | data[1]<<16 | data[2]<<8 | data[3];
-            ui -> temperatureField -> setText(QString::number((float)tmp_data));
+            ui -> temperatureField -> display((float)tmp_data);
             break;
         case 'W':
             tmp_data = data[0]<<24 | data[1]<<16 | data[2]<<8 | data[3];
-            ui -> anemoField -> setText(QString::number((float)tmp_data));
+            ui -> anemoField -> display((float)tmp_data);
             break;
         }
         break;
@@ -62,28 +62,30 @@ void MainWindow::onReceiveCANMessage(int fromId, char data_type, QList<int> data
             tmp_data = data[0]<<24 | data[1]<<16 | data[2]<<8 | data[3];
             lux = (float) tmp_data;
             luxSelectState = true;
+            ui -> lux_button -> setChecked(true);
             break;
         case 'R':
             tmp_data = data[0]<<24 | data[1]<<16 | data[2]<<8 | data[3];
             range = (float) tmp_data;
             luxSelectState = false;
+            ui -> range_button -> setChecked(true);
             break;
         }
         if (luxSelectState) {
-            ui->luxRangeField-> setText(QString::number(lux));
+            ui->luxRangeField-> display(lux);
             ui->luxRangeLabel->setText("lux");
         }
         else{
-            ui->luxRangeField-> setText(QString::number(range));
+            ui->luxRangeField-> display(range);
             ui->luxRangeLabel->setText("mm");
         }
         break;
     case ID_IMU_CARD:
         if (data_type == 'A')
         {
-            phiAngle = data[0]<<8 | data[1];
-            psiAngle = data[0]<<8 | data[1];
-            tetaAngle = data[0]<<8 | data[1];
+            phiAngle = 180+ (data[0]<<8 | data[1]);
+            psiAngle = 180+ (data[2]<<8 | data[3]);
+            tetaAngle = 180+ (data[4]<<8 | data[5]);
             Object_GL->setAngles(phiAngle, psiAngle, tetaAngle);
         }
     }
@@ -96,11 +98,11 @@ void MainWindow::onReceiveCANMessage(int fromId, char data_type, QList<int> data
 void MainWindow::onRefreshCanData() {
    switch(updateState)
     {
-        case 0: th_receiver->sendCANMessage(ID_IHM, ID_ANEMO_PRESSURE_CARD, 'P'); break;
-        case 1: th_receiver->sendCANMessage(ID_IHM, ID_ANEMO_PRESSURE_CARD, 'T'); break;
-        case 2: th_receiver->sendCANMessage(ID_IHM, ID_ANEMO_PRESSURE_CARD, 'W'); break;
-        case 3: th_receiver->sendCANMessage(ID_IHM, ID_LUX_RANGE_CARD, 'D'); break;
-        case 4: th_receiver->sendCANMessage(ID_IHM, ID_IMU_CARD, 'A'); break;
+        case 1: th_receiver->sendCANMessage(ID_IHM, ID_ANEMO_PRESSURE_CARD, 'P'); break;
+        case 2: th_receiver->sendCANMessage(ID_IHM, ID_ANEMO_PRESSURE_CARD, 'T'); break;
+        case 3: th_receiver->sendCANMessage(ID_IHM, ID_ANEMO_PRESSURE_CARD, 'W'); break;
+        case 4: th_receiver->sendCANMessage(ID_IHM, ID_LUX_RANGE_CARD, 'D'); break;
+        case 5: th_receiver->sendCANMessage(ID_IHM, ID_IMU_CARD, 'A'); break;
         default: updateState=0;
     }
     updateState++;
@@ -120,14 +122,14 @@ void MainWindow::onLuxButton()
 {
     luxSelectState = true;
     ui->luxRangeLabel->setText("lux");
-    th_receiver->sendCANMessage(ID_IHM, ID_LUX_RANGE_CARD, 'X', { 0x01 });
+    th_receiver->sendCANMessage(ID_IHM, ID_LUX_RANGE_CARD, 'X', { 1 });
 }
 
 void MainWindow::onRangeButton()
 {
     luxSelectState = false;
     ui->luxRangeLabel->setText("mm");
-    th_receiver->sendCANMessage(ID_IHM, ID_LUX_RANGE_CARD, 'X', { 0x00 });
+    th_receiver->sendCANMessage(ID_IHM, ID_LUX_RANGE_CARD, 'X', { 0 });
 }
 
 void MainWindow::resizeEvent(QResizeEvent *)

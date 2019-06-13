@@ -74,13 +74,9 @@
           <property name="title">
            <string>Anémomètre</string>
           </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="2,0,0">
            <item>
-            <widget class="QLineEdit" name="anemoField">
-             <property name="readOnly">
-              <bool>true</bool>
-             </property>
-            </widget>
+            <widget class="QLCDNumber" name="anemoField"/>
            </item>
            <item>
             <widget class="QLabel" name="label_2">
@@ -113,34 +109,14 @@
           <property name="title">
            <string>Luminosité/Distance </string>
           </property>
-          <layout class="QVBoxLayout" name="verticalLayout_2">
-           <item>
-            <spacer name="verticalSpacer_3">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeType">
-              <enum>QSizePolicy::Preferred</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
+          <layout class="QVBoxLayout" name="verticalLayout_2" stretch="1,4,1">
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="2,1">
              <property name="topMargin">
               <number>0</number>
              </property>
              <item>
-              <widget class="QLineEdit" name="luxRangeField">
-               <property name="readOnly">
-                <bool>true</bool>
-               </property>
-              </widget>
+              <widget class="QLCDNumber" name="luxRangeField"/>
              </item>
              <item>
               <widget class="QLabel" name="luxRangeLabel">
@@ -177,7 +153,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QRadioButton" name="distance_button">
+              <widget class="QRadioButton" name="range_button">
                <property name="text">
                 <string>Distance</string>
                </property>
@@ -198,6 +174,19 @@
              </item>
             </layout>
            </item>
+           <item>
+            <spacer name="verticalSpacer_3">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
           </layout>
          </widget>
         </item>
@@ -211,13 +200,9 @@
           <property name="title">
            <string>Pression</string>
           </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="2,0,0">
            <item>
-            <widget class="QLineEdit" name="pressureField">
-             <property name="readOnly">
-              <bool>true</bool>
-             </property>
-            </widget>
+            <widget class="QLCDNumber" name="pressureField"/>
            </item>
            <item>
             <widget class="QLabel" name="label_3">
@@ -245,13 +230,9 @@
           <property name="title">
            <string>Temperature</string>
           </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_4">
+          <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="2,0">
            <item>
-            <widget class="QLineEdit" name="temperatureField">
-             <property name="readOnly">
-              <bool>true</bool>
-             </property>
-            </widget>
+            <widget class="QLCDNumber" name="temperatureField"/>
            </item>
            <item>
             <widget class="QLabel" name="label_4">
@@ -292,7 +273,7 @@
      <x>0</x>
      <y>0</y>
      <width>689</width>
-     <height>22</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFichier">
@@ -368,7 +349,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>distance_button</sender>
+   <sender>range_button</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
    <slot>onRangeButton()</slot>

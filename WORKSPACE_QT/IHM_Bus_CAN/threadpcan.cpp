@@ -46,7 +46,7 @@ void ThreadPCAN::sendCANMessage(int fromId, int toId, unsigned char order, QList
 
     msgBuff.ID      =   static_cast<unsigned char>(toId);
     msgBuff.MSGTYPE =   MSGTYPE_STANDARD;
-    msgBuff.LEN     =   static_cast<unsigned char>(data.length()+1);
+    msgBuff.LEN     =   static_cast<unsigned char>(data.length()+2);
 
     msgBuff.DATA[0] = static_cast<unsigned char>(fromId);
     msgBuff.DATA[1] = order;
