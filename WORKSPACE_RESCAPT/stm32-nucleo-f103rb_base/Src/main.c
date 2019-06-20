@@ -176,9 +176,9 @@ void get_acceleroscope_gyroscope() {
 	float R33 = q0*q0 - q1*q1 - q2*q2 + q3*q3;
 
 	// Calcul des angle d'Euler a partir de la matrice de rotation(angle en degré)
-	phi 	= atan2(-R31, R33)*(180.0/M_PI);
-	teta 	= (asin(R32)*(180.0/M_PI));
-	psi 	= atan2(-R12,R22)*(180.0/M_PI);
+	phi 	= atan2(-R31, R33)*(180.0/M_PI)+180.0;
+	teta 	= (asin(R32)*(180.0/M_PI))+180.0;
+	psi 	= atan2(-R12,R22)*(180.0/M_PI)+180.0;
 }
 
 
@@ -278,11 +278,11 @@ void send_axes(void)
 {
 	unsigned char data[] = {
 		(unsigned char) ( (int) (phi) )>>8,
-		(unsigned char) ( (int) (phi) )& 0x000000FF,
+		(unsigned char) ( (int) (phi) )& 0xFF,
 		(unsigned char) ( (int) (psi) )>>8,
-		(unsigned char) ( (int) (psi) ) & 0x000000FF,
+		(unsigned char) ( (int) (psi) ) & 0xFF,
 		(unsigned char) ( (int) (teta) )>>8,
-		(unsigned char) ( (int) (teta) ) & 0x000000FF
+		(unsigned char) ( (int) (teta) ) & 0xFF
 	};
 	send_can(ID_IMU_CARD, ID_IHM, 'A', data, (int) sizeof(data) / sizeof(data[0]));
     term_printf("roulis = %f \n", phi);

@@ -10482,3 +10482,299 @@ org.eclipse.cdt.debug.mi.core.MIException: Error erasing flash with vFlashErase 
 	at org.eclipse.debug.internal.ui.DebugUIPlugin.buildAndLaunch(DebugUIPlugin.java:1039)
 	at org.eclipse.debug.internal.ui.DebugUIPlugin$8.run(DebugUIPlugin.java:1256)
 	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+!SESSION 2019-06-20 15:40:52.159 -----------------------------------------------
+eclipse.buildId=4.4.2.M20150204-1700
+java.version=1.8.0_141
+java.vendor=Oracle Corporation
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.cpp.product
+Command-line arguments:  -os linux -ws gtk -arch x86_64 -product org.eclipse.epp.package.cpp.product
+
+!ENTRY org.eclipse.cdt.debug.mi.core 4 150 2019-06-20 15:43:54.777
+!MESSAGE Error creating session
+!STACK 0
+java.io.IOException: Cannot run program "arm-none-eabi-gdb": Unknown reason
+	at org.eclipse.cdt.utils.spawner.Spawner.exec(Spawner.java:349)
+	at org.eclipse.cdt.utils.spawner.Spawner.<init>(Spawner.java:91)
+	at org.eclipse.cdt.utils.spawner.Spawner.<init>(Spawner.java:120)
+	at org.eclipse.cdt.utils.spawner.Spawner.<init>(Spawner.java:112)
+	at org.eclipse.cdt.utils.spawner.ProcessFactory.exec(ProcessFactory.java:65)
+	at org.eclipse.cdt.debug.mi.core.MIProcessAdapter.createGDBProcess(MIProcessAdapter.java:116)
+	at org.eclipse.cdt.debug.mi.core.MIProcessAdapter.getGDBProcess(MIProcessAdapter.java:51)
+	at org.eclipse.cdt.debug.mi.core.MIProcessAdapter.<init>(MIProcessAdapter.java:38)
+	at org.eclipse.cdt.debug.mi.core.command.CommandFactory.createMIProcess(CommandFactory.java:467)
+	at org.eclipse.cdt.debug.mi.core.MIPlugin.createSession(MIPlugin.java:468)
+	at org.eclipse.cdt.debug.mi.core.AbstractGDBCDIDebugger.createGDBSession(AbstractGDBCDIDebugger.java:116)
+	at org.eclipse.cdt.debug.mi.core.AbstractGDBCDIDebugger.createSession(AbstractGDBCDIDebugger.java:70)
+	at org.eclipse.cdt.debug.gdbjtag.core.GDBJtagDebugger.createSession(GDBJtagDebugger.java:69)
+	at org.eclipse.cdt.debug.gdbjtag.core.GDBJtagLaunchConfigurationDelegate.launch(GDBJtagLaunchConfigurationDelegate.java:54)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:885)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:739)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin.buildAndLaunch(DebugUIPlugin.java:1039)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin$8.run(DebugUIPlugin.java:1256)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+!SUBENTRY 1 org.eclipse.cdt.debug.mi.core 4 150 2019-06-20 15:43:54.787
+!MESSAGE Cannot run program "arm-none-eabi-gdb": Unknown reason
+!STACK 0
+java.io.IOException: Cannot run program "arm-none-eabi-gdb": Unknown reason
+	at org.eclipse.cdt.utils.spawner.Spawner.exec(Spawner.java:349)
+	at org.eclipse.cdt.utils.spawner.Spawner.<init>(Spawner.java:91)
+	at org.eclipse.cdt.utils.spawner.Spawner.<init>(Spawner.java:120)
+	at org.eclipse.cdt.utils.spawner.Spawner.<init>(Spawner.java:112)
+	at org.eclipse.cdt.utils.spawner.ProcessFactory.exec(ProcessFactory.java:65)
+	at org.eclipse.cdt.debug.mi.core.MIProcessAdapter.createGDBProcess(MIProcessAdapter.java:116)
+	at org.eclipse.cdt.debug.mi.core.MIProcessAdapter.getGDBProcess(MIProcessAdapter.java:51)
+	at org.eclipse.cdt.debug.mi.core.MIProcessAdapter.<init>(MIProcessAdapter.java:38)
+	at org.eclipse.cdt.debug.mi.core.command.CommandFactory.createMIProcess(CommandFactory.java:467)
+	at org.eclipse.cdt.debug.mi.core.MIPlugin.createSession(MIPlugin.java:468)
+	at org.eclipse.cdt.debug.mi.core.AbstractGDBCDIDebugger.createGDBSession(AbstractGDBCDIDebugger.java:116)
+	at org.eclipse.cdt.debug.mi.core.AbstractGDBCDIDebugger.createSession(AbstractGDBCDIDebugger.java:70)
+	at org.eclipse.cdt.debug.gdbjtag.core.GDBJtagDebugger.createSession(GDBJtagDebugger.java:69)
+	at org.eclipse.cdt.debug.gdbjtag.core.GDBJtagLaunchConfigurationDelegate.launch(GDBJtagLaunchConfigurationDelegate.java:54)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:885)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:739)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin.buildAndLaunch(DebugUIPlugin.java:1039)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin$8.run(DebugUIPlugin.java:1256)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+
+!ENTRY org.eclipse.cdt.debug.mi.core 4 150 2019-06-20 15:43:59.469
+!MESSAGE Error creating session
+!STACK 0
+java.io.IOException: Cannot run program "arm-none-eabi-gdb": Unknown reason
+	at org.eclipse.cdt.utils.spawner.Spawner.exec(Spawner.java:349)
+	at org.eclipse.cdt.utils.spawner.Spawner.<init>(Spawner.java:91)
+	at org.eclipse.cdt.utils.spawner.Spawner.<init>(Spawner.java:120)
+	at org.eclipse.cdt.utils.spawner.Spawner.<init>(Spawner.java:112)
+	at org.eclipse.cdt.utils.spawner.ProcessFactory.exec(ProcessFactory.java:65)
+	at org.eclipse.cdt.debug.mi.core.MIProcessAdapter.createGDBProcess(MIProcessAdapter.java:116)
+	at org.eclipse.cdt.debug.mi.core.MIProcessAdapter.getGDBProcess(MIProcessAdapter.java:51)
+	at org.eclipse.cdt.debug.mi.core.MIProcessAdapter.<init>(MIProcessAdapter.java:38)
+	at org.eclipse.cdt.debug.mi.core.command.CommandFactory.createMIProcess(CommandFactory.java:467)
+	at org.eclipse.cdt.debug.mi.core.MIPlugin.createSession(MIPlugin.java:468)
+	at org.eclipse.cdt.debug.mi.core.AbstractGDBCDIDebugger.createGDBSession(AbstractGDBCDIDebugger.java:116)
+	at org.eclipse.cdt.debug.mi.core.AbstractGDBCDIDebugger.createSession(AbstractGDBCDIDebugger.java:70)
+	at org.eclipse.cdt.debug.gdbjtag.core.GDBJtagDebugger.createSession(GDBJtagDebugger.java:69)
+	at org.eclipse.cdt.debug.gdbjtag.core.GDBJtagLaunchConfigurationDelegate.launch(GDBJtagLaunchConfigurationDelegate.java:54)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:885)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:739)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin.buildAndLaunch(DebugUIPlugin.java:1039)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin$8.run(DebugUIPlugin.java:1256)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+!SUBENTRY 1 org.eclipse.cdt.debug.mi.core 4 150 2019-06-20 15:43:59.469
+!MESSAGE Cannot run program "arm-none-eabi-gdb": Unknown reason
+!STACK 0
+java.io.IOException: Cannot run program "arm-none-eabi-gdb": Unknown reason
+	at org.eclipse.cdt.utils.spawner.Spawner.exec(Spawner.java:349)
+	at org.eclipse.cdt.utils.spawner.Spawner.<init>(Spawner.java:91)
+	at org.eclipse.cdt.utils.spawner.Spawner.<init>(Spawner.java:120)
+	at org.eclipse.cdt.utils.spawner.Spawner.<init>(Spawner.java:112)
+	at org.eclipse.cdt.utils.spawner.ProcessFactory.exec(ProcessFactory.java:65)
+	at org.eclipse.cdt.debug.mi.core.MIProcessAdapter.createGDBProcess(MIProcessAdapter.java:116)
+	at org.eclipse.cdt.debug.mi.core.MIProcessAdapter.getGDBProcess(MIProcessAdapter.java:51)
+	at org.eclipse.cdt.debug.mi.core.MIProcessAdapter.<init>(MIProcessAdapter.java:38)
+	at org.eclipse.cdt.debug.mi.core.command.CommandFactory.createMIProcess(CommandFactory.java:467)
+	at org.eclipse.cdt.debug.mi.core.MIPlugin.createSession(MIPlugin.java:468)
+	at org.eclipse.cdt.debug.mi.core.AbstractGDBCDIDebugger.createGDBSession(AbstractGDBCDIDebugger.java:116)
+	at org.eclipse.cdt.debug.mi.core.AbstractGDBCDIDebugger.createSession(AbstractGDBCDIDebugger.java:70)
+	at org.eclipse.cdt.debug.gdbjtag.core.GDBJtagDebugger.createSession(GDBJtagDebugger.java:69)
+	at org.eclipse.cdt.debug.gdbjtag.core.GDBJtagLaunchConfigurationDelegate.launch(GDBJtagLaunchConfigurationDelegate.java:54)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:885)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:739)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin.buildAndLaunch(DebugUIPlugin.java:1039)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin$8.run(DebugUIPlugin.java:1256)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+
+!ENTRY org.eclipse.cdt.debug.mi.core 4 150 2019-06-20 15:44:42.738
+!MESSAGE Error creating session
+!STACK 0
+java.io.IOException: Cannot run program "arm-none-eabi-gdb": Unknown reason
+	at org.eclipse.cdt.utils.spawner.Spawner.exec(Spawner.java:349)
+	at org.eclipse.cdt.utils.spawner.Spawner.<init>(Spawner.java:91)
+	at org.eclipse.cdt.utils.spawner.Spawner.<init>(Spawner.java:120)
+	at org.eclipse.cdt.utils.spawner.Spawner.<init>(Spawner.java:112)
+	at org.eclipse.cdt.utils.spawner.ProcessFactory.exec(ProcessFactory.java:65)
+	at org.eclipse.cdt.debug.mi.core.MIProcessAdapter.createGDBProcess(MIProcessAdapter.java:116)
+	at org.eclipse.cdt.debug.mi.core.MIProcessAdapter.getGDBProcess(MIProcessAdapter.java:51)
+	at org.eclipse.cdt.debug.mi.core.MIProcessAdapter.<init>(MIProcessAdapter.java:38)
+	at org.eclipse.cdt.debug.mi.core.command.CommandFactory.createMIProcess(CommandFactory.java:467)
+	at org.eclipse.cdt.debug.mi.core.MIPlugin.createSession(MIPlugin.java:468)
+	at org.eclipse.cdt.debug.mi.core.AbstractGDBCDIDebugger.createGDBSession(AbstractGDBCDIDebugger.java:116)
+	at org.eclipse.cdt.debug.mi.core.AbstractGDBCDIDebugger.createSession(AbstractGDBCDIDebugger.java:70)
+	at org.eclipse.cdt.debug.gdbjtag.core.GDBJtagDebugger.createSession(GDBJtagDebugger.java:69)
+	at org.eclipse.cdt.debug.gdbjtag.core.GDBJtagLaunchConfigurationDelegate.launch(GDBJtagLaunchConfigurationDelegate.java:54)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:885)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:739)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin.buildAndLaunch(DebugUIPlugin.java:1039)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin$8.run(DebugUIPlugin.java:1256)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+!SUBENTRY 1 org.eclipse.cdt.debug.mi.core 4 150 2019-06-20 15:44:42.738
+!MESSAGE Cannot run program "arm-none-eabi-gdb": Unknown reason
+!STACK 0
+java.io.IOException: Cannot run program "arm-none-eabi-gdb": Unknown reason
+	at org.eclipse.cdt.utils.spawner.Spawner.exec(Spawner.java:349)
+	at org.eclipse.cdt.utils.spawner.Spawner.<init>(Spawner.java:91)
+	at org.eclipse.cdt.utils.spawner.Spawner.<init>(Spawner.java:120)
+	at org.eclipse.cdt.utils.spawner.Spawner.<init>(Spawner.java:112)
+	at org.eclipse.cdt.utils.spawner.ProcessFactory.exec(ProcessFactory.java:65)
+	at org.eclipse.cdt.debug.mi.core.MIProcessAdapter.createGDBProcess(MIProcessAdapter.java:116)
+	at org.eclipse.cdt.debug.mi.core.MIProcessAdapter.getGDBProcess(MIProcessAdapter.java:51)
+	at org.eclipse.cdt.debug.mi.core.MIProcessAdapter.<init>(MIProcessAdapter.java:38)
+	at org.eclipse.cdt.debug.mi.core.command.CommandFactory.createMIProcess(CommandFactory.java:467)
+	at org.eclipse.cdt.debug.mi.core.MIPlugin.createSession(MIPlugin.java:468)
+	at org.eclipse.cdt.debug.mi.core.AbstractGDBCDIDebugger.createGDBSession(AbstractGDBCDIDebugger.java:116)
+	at org.eclipse.cdt.debug.mi.core.AbstractGDBCDIDebugger.createSession(AbstractGDBCDIDebugger.java:70)
+	at org.eclipse.cdt.debug.gdbjtag.core.GDBJtagDebugger.createSession(GDBJtagDebugger.java:69)
+	at org.eclipse.cdt.debug.gdbjtag.core.GDBJtagLaunchConfigurationDelegate.launch(GDBJtagLaunchConfigurationDelegate.java:54)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:885)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:739)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin.buildAndLaunch(DebugUIPlugin.java:1039)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin$8.run(DebugUIPlugin.java:1256)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+
+!ENTRY org.eclipse.cdt.debug.core 4 104 2019-06-20 15:44:53.415
+!MESSAGE The program file specified in the launch configuration does not exist
+!STACK 0
+java.io.FileNotFoundException: /home/e2015/d5levequ/Documents/S7/CRS/BUS_CAN/WORKSPACE_RESCAPT/stm32-nucleo-f103rb_base/template.elf not found
+	at org.eclipse.cdt.debug.core.CDebugUtils.verifyProgramPath(CDebugUtils.java:691)
+	at org.eclipse.cdt.debug.core.CDebugUtils.verifyProgramPath(CDebugUtils.java:707)
+	at org.eclipse.cdt.debug.gdbjtag.core.GDBJtagLaunchConfigurationDelegate.launch(GDBJtagLaunchConfigurationDelegate.java:53)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:885)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:739)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin.buildAndLaunch(DebugUIPlugin.java:1039)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin$8.run(DebugUIPlugin.java:1256)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+!SESSION 2019-06-20 15:45:17.089 -----------------------------------------------
+eclipse.buildId=4.4.2.M20150204-1700
+java.version=1.8.0_141
+java.vendor=Oracle Corporation
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.cpp.product
+Command-line arguments:  -os linux -ws gtk -arch x86_64 -product org.eclipse.epp.package.cpp.product
+
+!ENTRY org.eclipse.cdt.debug.core 4 104 2019-06-20 15:45:37.851
+!MESSAGE The program file specified in the launch configuration does not exist
+!STACK 0
+java.io.FileNotFoundException: /home/e2015/d5levequ/Documents/S7/CRS/BUS_CAN/WORKSPACE_RESCAPT/stm32-nucleo-f103rb_base/template.elf not found
+	at org.eclipse.cdt.debug.core.CDebugUtils.verifyProgramPath(CDebugUtils.java:691)
+	at org.eclipse.cdt.debug.core.CDebugUtils.verifyProgramPath(CDebugUtils.java:707)
+	at org.eclipse.cdt.debug.gdbjtag.core.GDBJtagLaunchConfigurationDelegate.launch(GDBJtagLaunchConfigurationDelegate.java:53)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:885)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:739)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin.buildAndLaunch(DebugUIPlugin.java:1039)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin$8.run(DebugUIPlugin.java:1256)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+
+!ENTRY org.eclipse.cdt.debug.core 4 104 2019-06-20 15:46:07.949
+!MESSAGE The program file specified in the launch configuration does not exist
+!STACK 0
+java.io.FileNotFoundException: /home/e2015/d5levequ/Documents/S7/CRS/BUS_CAN/WORKSPACE_RESCAPT/stm32-nucleo-f103rb_base/template.elf not found
+	at org.eclipse.cdt.debug.core.CDebugUtils.verifyProgramPath(CDebugUtils.java:691)
+	at org.eclipse.cdt.debug.core.CDebugUtils.verifyProgramPath(CDebugUtils.java:707)
+	at org.eclipse.cdt.debug.gdbjtag.core.GDBJtagLaunchConfigurationDelegate.launch(GDBJtagLaunchConfigurationDelegate.java:53)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:885)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:739)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin.buildAndLaunch(DebugUIPlugin.java:1039)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin$8.run(DebugUIPlugin.java:1256)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+
+!ENTRY org.eclipse.cdt.debug.core 4 104 2019-06-20 15:52:24.897
+!MESSAGE The program file specified in the launch configuration does not exist
+!STACK 0
+java.io.FileNotFoundException: /home/e2015/d5levequ/Documents/S7/CRS/BUS_CAN/WORKSPACE_RESCAPT/stm32-nucleo-f103rb_base/template.elf not found
+	at org.eclipse.cdt.debug.core.CDebugUtils.verifyProgramPath(CDebugUtils.java:691)
+	at org.eclipse.cdt.debug.core.CDebugUtils.verifyProgramPath(CDebugUtils.java:707)
+	at org.eclipse.cdt.debug.gdbjtag.core.GDBJtagLaunchConfigurationDelegate.launch(GDBJtagLaunchConfigurationDelegate.java:53)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:885)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:739)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin.buildAndLaunch(DebugUIPlugin.java:1039)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin$8.run(DebugUIPlugin.java:1256)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+!SESSION 2019-06-20 15:28:58.386 -----------------------------------------------
+eclipse.buildId=4.4.2.M20150204-1700
+java.version=1.8.0_141
+java.vendor=Oracle Corporation
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.cpp.product
+Command-line arguments:  -os linux -ws gtk -arch x86_64 -product org.eclipse.epp.package.cpp.product
+
+!ENTRY org.eclipse.cdt.debug.core 4 104 2019-06-20 15:29:40.064
+!MESSAGE The program file specified in the launch configuration does not exist
+!STACK 0
+java.io.FileNotFoundException: /home/e2015/d5levequ/Documents/S7/CRS/BUS_CAN/WORKSPACE_RESCAPT/stm32-nucleo-f103rb_base/template.elf not found
+	at org.eclipse.cdt.debug.core.CDebugUtils.verifyProgramPath(CDebugUtils.java:691)
+	at org.eclipse.cdt.debug.core.CDebugUtils.verifyProgramPath(CDebugUtils.java:707)
+	at org.eclipse.cdt.debug.gdbjtag.core.GDBJtagLaunchConfigurationDelegate.launch(GDBJtagLaunchConfigurationDelegate.java:53)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:885)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:739)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin.buildAndLaunch(DebugUIPlugin.java:1039)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin$8.run(DebugUIPlugin.java:1256)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+!SESSION 2019-06-20 16:08:01.967 -----------------------------------------------
+eclipse.buildId=4.4.2.M20150204-1700
+java.version=1.8.0_141
+java.vendor=Oracle Corporation
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.cpp.product
+Command-line arguments:  -os linux -ws gtk -arch x86_64 -product org.eclipse.epp.package.cpp.product
+
+!ENTRY org.eclipse.cdt.debug.mi.core 4 42 2019-06-20 16:20:24.815
+!MESSAGE Internal Error
+!STACK 0
+org.eclipse.cdt.debug.mi.core.cdi.MI2CDIException: Inferior terminated[]
+	at org.eclipse.cdt.debug.mi.core.cdi.SharedLibraryManager.getMIShareds(SharedLibraryManager.java:123)
+	at org.eclipse.cdt.debug.mi.core.cdi.SharedLibraryManager.updateState(SharedLibraryManager.java:189)
+	at org.eclipse.cdt.debug.mi.core.cdi.SharedLibraryManager.update(SharedLibraryManager.java:137)
+	at org.eclipse.cdt.debug.mi.core.cdi.EventManager.processSuspendedEvent(EventManager.java:329)
+	at org.eclipse.cdt.debug.mi.core.cdi.EventManager.update(EventManager.java:101)
+	at java.util.Observable.notifyObservers(Observable.java:159)
+	at org.eclipse.cdt.debug.mi.core.MISession.notifyObservers(MISession.java:797)
+	at org.eclipse.cdt.debug.mi.core.EventThread.run(EventThread.java:47)
+
+!ENTRY org.eclipse.cdt.debug.mi.core 4 42 2019-06-20 16:35:23.946
+!MESSAGE Internal Error
+!STACK 0
+org.eclipse.cdt.debug.mi.core.cdi.MI2CDIException: Inferior terminated[]
+	at org.eclipse.cdt.debug.mi.core.cdi.SharedLibraryManager.getMIShareds(SharedLibraryManager.java:123)
+	at org.eclipse.cdt.debug.mi.core.cdi.SharedLibraryManager.updateState(SharedLibraryManager.java:189)
+	at org.eclipse.cdt.debug.mi.core.cdi.SharedLibraryManager.update(SharedLibraryManager.java:137)
+	at org.eclipse.cdt.debug.mi.core.cdi.EventManager.processSuspendedEvent(EventManager.java:329)
+	at org.eclipse.cdt.debug.mi.core.cdi.EventManager.update(EventManager.java:101)
+	at java.util.Observable.notifyObservers(Observable.java:159)
+	at org.eclipse.cdt.debug.mi.core.MISession.notifyObservers(MISession.java:797)
+	at org.eclipse.cdt.debug.mi.core.EventThread.run(EventThread.java:47)
+
+!ENTRY org.eclipse.debug.ui 4 120 2019-06-20 16:37:36.834
+!MESSAGE Error logged from Debug UI: 
+!STACK 0
+java.io.IOException: Output Stream is closed
+	at org.eclipse.ui.console.IOConsoleOutputStream.encodedWrite(IOConsoleOutputStream.java:231)
+	at org.eclipse.ui.console.IOConsoleOutputStream.write(IOConsoleOutputStream.java:199)
+	at org.eclipse.ui.console.IOConsoleOutputStream.write(IOConsoleOutputStream.java:208)
+	at org.eclipse.debug.internal.ui.views.console.ProcessConsole$StreamListener.streamAppended(ProcessConsole.java:606)
+	at org.eclipse.debug.internal.core.OutputStreamMonitor$ContentNotifier.run(OutputStreamMonitor.java:267)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.debug.internal.core.OutputStreamMonitor$ContentNotifier.notifyAppend(OutputStreamMonitor.java:278)
+	at org.eclipse.debug.internal.core.OutputStreamMonitor.fireStreamAppended(OutputStreamMonitor.java:118)
+	at org.eclipse.debug.internal.core.OutputStreamMonitor.read(OutputStreamMonitor.java:159)
+	at org.eclipse.debug.internal.core.OutputStreamMonitor.access$1(OutputStreamMonitor.java:137)
+	at org.eclipse.debug.internal.core.OutputStreamMonitor$1.run(OutputStreamMonitor.java:212)
+	at java.lang.Thread.run(Thread.java:748)
+
+!ENTRY org.eclipse.debug.ui 4 120 2019-06-20 16:37:36.836
+!MESSAGE Error logged from Debug UI: 
+!STACK 0
+java.io.IOException: Document is closed
+	at org.eclipse.ui.internal.console.IOConsolePartitioner.streamAppended(IOConsolePartitioner.java:464)
+	at org.eclipse.ui.console.IOConsoleOutputStream.notifyParitioner(IOConsoleOutputStream.java:247)
+	at org.eclipse.ui.console.IOConsoleOutputStream.encodedWrite(IOConsoleOutputStream.java:242)
+	at org.eclipse.ui.console.IOConsoleOutputStream.write(IOConsoleOutputStream.java:199)
+	at org.eclipse.ui.console.IOConsoleOutputStream.write(IOConsoleOutputStream.java:208)
+	at org.eclipse.debug.internal.ui.views.console.ProcessConsole$StreamListener.streamAppended(ProcessConsole.java:606)
+	at org.eclipse.debug.internal.core.OutputStreamMonitor$ContentNotifier.run(OutputStreamMonitor.java:267)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.debug.internal.core.OutputStreamMonitor$ContentNotifier.notifyAppend(OutputStreamMonitor.java:278)
+	at org.eclipse.debug.internal.core.OutputStreamMonitor.fireStreamAppended(OutputStreamMonitor.java:118)
+	at org.eclipse.debug.internal.core.OutputStreamMonitor.read(OutputStreamMonitor.java:159)
+	at org.eclipse.debug.internal.core.OutputStreamMonitor.access$1(OutputStreamMonitor.java:137)
+	at org.eclipse.debug.internal.core.OutputStreamMonitor$1.run(OutputStreamMonitor.java:212)
+	at java.lang.Thread.run(Thread.java:748)

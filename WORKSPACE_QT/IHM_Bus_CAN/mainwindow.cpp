@@ -15,7 +15,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(th_receiver, SIGNAL(terminate()), this, SLOT(onThreadPcanTerminate()));
 
     refresh_timer = new QTimer();
-    refresh_timer->start(10); // 10ms
+    refresh_timer->start(20); // 10ms
     connect(refresh_timer, SIGNAL(timeout()), this, SLOT(onRefreshCanData()));
 
     // Create the openGL display for the map
@@ -37,7 +37,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::onReceiveCANMessage(int fromId, char data_type, QList<int> data, int len)
 {
-    printf("ID: %x lenght: %d\n", fromId, len);
+    //printf("ID: %x lenght: %d\n", fromId, len);
     int tmp_data;
     switch (fromId) {
     case ID_ANEMO_PRESSURE_CARD:
@@ -83,10 +83,12 @@ void MainWindow::onReceiveCANMessage(int fromId, char data_type, QList<int> data
     case ID_IMU_CARD:
         if (data_type == 'A')
         {
-            phiAngle = 180+ (data[0]<<8 | data[1]);
-            psiAngle = 180+ (data[2]<<8 | data[3]);
-            tetaAngle = 180+ (data[4]<<8 | data[5]);
-            Object_GL->setAngles(phiAngle, psiAngle, tetaAngle);
+            phiAngle = (data[0]<<8 | data[1]);
+            psiAngle = (data[2]<<8 | data[3]);
+            tetaAngle = (data[4]<<8 | data[5]);
+
+            printf("phi %d, psi %d, teta %d\n", phiAngle, psiAngle, tetaAngle);
+            Object_GL->setAngles(phiAngle, tetaAngle, psiAngle);
         }
     }
 }
